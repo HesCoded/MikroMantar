@@ -262,10 +262,11 @@
     }
     .report-name {
       font-weight: bold;
-      min-width: 130px;
+      min-width: 60px;
     }
     .report-mic {
       color: #333;
+      min-width: 100px;
     }
     .badge {
       display: inline-block;
@@ -278,9 +279,7 @@
     .badge.cat-s {
       background: #2a9d5c;
     }
-    .badge.cat-i,
-    .badge.cat-sdd,
-    .badge.cat-dbd {
+    .badge.cat-i {
       background: #d99a00;
     }
     .badge.cat-r {
@@ -362,8 +361,6 @@
   </div>
 
   <script>
-    // data1.json içeriği - dosyayı doğrudan çift tıklayarak (file://)
-    // açabilmek için burada gömülüdür.
     const GUIDE1_DATA = {
         "mantarlar" : [
             {
@@ -374,7 +371,6 @@
                         "degerler" : {
                             "s" : "0.25",
                             "i" : "0.5",
-                            "sdd" : "-",
                             "r" : "1"
                         }
                     },
@@ -383,7 +379,6 @@
                         "degerler" : {
                             "s" : "0.25",
                             "i" : "0.5",
-                            "sdd" : "-",
                             "r" : "1"
                         }
                     },
@@ -392,7 +387,6 @@
                         "degerler" : {
                             "s" : "0.25",
                             "i" : "0.5",
-                            "sdd" : "-",
                             "r" : "1"
                         }
                     },
@@ -401,7 +395,6 @@
                         "degerler" : {
                             "s" : "-",
                             "i" : "-",
-                            "sdd" : "-",
                             "r" : "-"
                         }
                     },
@@ -410,7 +403,6 @@
                         "degerler" : {
                             "s" : "2",
                             "i" : "-",
-                            "sdd" : "-",
                             "r" : "4"
                         }
                     },
@@ -419,7 +411,6 @@
                         "degerler" : {
                             "s" : "0.12",
                             "i" : "0.25-0.5",
-                            "sdd" : "-",
                             "r" : "1"
                         }
                     },
@@ -428,7 +419,6 @@
                         "degerler" : {
                             "s" : "0.06",
                             "i" : "-",
-                            "sdd" : "-",
                             "r" : "0.12"
                         }
                     },
@@ -437,7 +427,6 @@
                         "degerler" : {
                             "s" : "2",
                             "i" : "4",
-                            "sdd" : "-",
                             "r" : "8"
                         }
                     },
@@ -446,7 +435,6 @@
                         "degerler" : {
                             "s" : "1",
                             "i" : "-",
-                            "sdd" : "-",
                             "r" : "2"
                         }
                     }
@@ -460,7 +448,6 @@
                         "degerler" : {
                             "s" : "0.25",
                             "i" : "-",
-                            "sdd" : "-",
                             "r" : "0.5"
                         }
                     },
@@ -469,17 +456,15 @@
                         "degerler" : {
                             "s" : "0.25",
                             "i" : "-",
-                            "sdd" : "-",
                             "r" : "0.5"
                         }
                     },
                     {
                         "antifungal" : "Kaspofungin",
                         "degerler" : {
-                            "s" : "IE",
+                            "s" : "-",
                             "i" : "-",
-                            "sdd" : "-",
-                            "r" : "IE"
+                            "r" : "-"
                         }
                     },
                     {
@@ -487,35 +472,31 @@
                         "degerler" : {
                             "s" : "-",
                             "i" : "-",
-                            "sdd" : "-",
                             "r" : "-"
                         }
                     },
                     {
                         "antifungal" : "Posakonazol",
                         "degerler" : {
-                            "s" : "IE",
+                            "s" : "-",
                             "i" : "-",
-                            "sdd" : "-",
-                            "r" : "IE"
+                            "r" : "-"
                         }
                     },
                     {
                         "antifungal" : "Vorikonazol",
                         "degerler" : {
-                            "s" : "IE",
+                            "s" : "-",
                             "i" : "-",
-                            "sdd" : "-",
-                            "r" : "IE"
+                            "r" : "-"
                         }
                     },
                     {
                         "antifungal" : "İtrakonazol",
                         "degerler" : {
-                            "s" : "IE",
+                            "s" : "-",
                             "i" : "-",
-                            "sdd" : "-",
-                            "r" : "IE"
+                            "r" : "-"
                         }
                     },
                     {
@@ -523,7 +504,6 @@
                         "degerler" : {
                             "s" : "16",
                             "i" : "-",
-                            "sdd" : "-",
                             "r" : "32"
                         },
                         "not" : "Çoğu C. auris izolatı > 16 mg/L flukonazol MİK değerine sahiptir ve edinilmiş direnç mekanizmaları vardır. Daha düşük MİK değerine sahip izolatlar için klinik veriler sınırlıdır. EUCAST'in MİK düşük olsa bile flukonazol tedavisini destekleyecek yeterli verisi yoktur."
@@ -533,7 +513,6 @@
                         "degerler" : {
                             "s" : "0.001",
                             "i" : "-",
-                            "sdd" : "-",
                             "r" : "2"
                         },
                         "not" : "C. auris vahşi tip popülasyonunun tamamı Amfoterisin B için I kategorisindedir. Duyarlı kategori (<0.001 mg/L), herhangi bir vahşi tip suşunun S suşu olarak yanlış sınıflandırılmasını önlemek içindir."
@@ -548,7 +527,6 @@
                         "degerler" : {
                             "s" : "0.03",
                             "i" : "-",
-                            "sdd" : "-",
                             "r" : "0.06"
                         }
                     },
@@ -557,17 +535,15 @@
                         "degerler" : {
                             "s" : "0.06",
                             "i" : "-",
-                            "sdd" : "-",
                             "r" : "0.12"
                         }
                     },
                     {
                         "antifungal" : "Kaspofungin",
                         "degerler" : {
-                            "s" : "IE",
+                            "s" : "-",
                             "i" : "-",
-                            "sdd" : "-",
-                            "r" : "IE"
+                            "r" : "-"
                         }
                     },
                     {
@@ -575,7 +551,6 @@
                         "degerler" : {
                             "s" : "-",
                             "i" : "-",
-                            "sdd" : "-",
                             "r" : "-"
                         }
                     },
@@ -584,7 +559,6 @@
                         "degerler" : {
                             "s" : "0.06",
                             "i" : "-",
-                            "sdd" : "-",
                             "r" : "0.12"
                         }
                     },
@@ -593,7 +567,6 @@
                         "degerler" : {
                             "s" : "0.06",
                             "i" : "-",
-                            "sdd" : "-",
                             "r" : "0.25"
                         }
                     },
@@ -602,7 +575,6 @@
                         "degerler" : {
                             "s" : "0.06",
                             "i" : "-",
-                            "sdd" : "-",
                             "r" : "0.12"
                         }
                     },
@@ -611,7 +583,6 @@
                         "degerler" : {
                             "s" : "2",
                             "i" : "-",
-                            "sdd" : "-",
                             "r" : "4"
                         }
                     },
@@ -620,7 +591,6 @@
                         "degerler" : {
                             "s" : "1",
                             "i" : "-",
-                            "sdd" : "-",
                             "r" : "2"
                         }
                     }
@@ -634,7 +604,6 @@
                         "degerler" : {
                             "s" : "0.12",
                             "i" : "0.25",
-                            "sdd" : "-",
                             "r" : "0.5"
                         }
                     },
@@ -643,7 +612,6 @@
                         "degerler" : {
                             "s" : "0.06",
                             "i" : "0.12",
-                            "sdd" : "-",
                             "r" : "0.25"
                         }
                     },
@@ -652,7 +620,6 @@
                         "degerler" : {
                             "s" : "0.12",
                             "i" : "0.25",
-                            "sdd" : "-",
                             "r" : "0.5"
                         }
                     },
@@ -661,17 +628,15 @@
                         "degerler" : {
                             "s" : "-",
                             "i" : "-",
-                            "sdd" : "-",
                             "r" : "-"
                         }
                     },
                     {
                         "antifungal" : "Posakonazol",
                         "degerler" : {
-                            "s" : "IE",
+                            "s" : "-",
                             "i" : "-",
-                            "sdd" : "-",
-                            "r" : "IE"
+                            "r" : "-"
                         },
                         "not" : "Bu türlerin ECOFF değerleri genel olarak C. albinans'ın değerlerinden daha yüksektir."
                     },
@@ -680,17 +645,15 @@
                         "degerler" : {
                             "s" : "-",
                             "i" : "-",
-                            "sdd" : "-",
                             "r" : "-"
                         }
                     },
                     {
                         "antifungal" : "İtrakonazol",
                         "degerler" : {
-                            "s" : "IE",
+                            "s" : "-",
                             "i" : "-",
-                            "sdd" : "-",
-                            "r" : "IE"
+                            "r" : "-"
                         },
                         "not" : "Bu türlerin ECOFF değerleri genel olarak C. albinans'ın değerlerinden daha yüksektir."
                     },
@@ -699,7 +662,6 @@
                         "degerler" : {
                             "s" : "16",
                             "i" : "32",
-                            "sdd" : "-",
                             "r" : "64"
                         }
                     },
@@ -708,7 +670,6 @@
                         "degerler" : {
                             "s" : "1",
                             "i" : "-",
-                            "sdd" : "-",
                             "r" : "2"
                         }
                     }
@@ -722,7 +683,6 @@
                         "degerler" : {
                             "s" : "0.25",
                             "i" : "0.5",
-                            "sdd" : "-",
                             "r" : "1"
                         }
                     },
@@ -731,7 +691,6 @@
                         "degerler" : {
                             "s" : "0.25",
                             "i" : "0.5",
-                            "sdd" : "-",
                             "r" : "1"
                         }
                     },
@@ -740,7 +699,6 @@
                         "degerler" : {
                             "s" : "0.25",
                             "i" : "0.5",
-                            "sdd" : "-",
                             "r" : "1"
                         }
                     },
@@ -749,17 +707,15 @@
                         "degerler" : {
                             "s" : "-",
                             "i" : "-",
-                            "sdd" : "-",
                             "r" : "-"
                         }
                     },
                     {
                         "antifungal" : "Posakonazol",
                         "degerler" : {
-                            "s" : "IE",
+                            "s" : "-",
                             "i" : "-",
-                            "sdd" : "-",
-                            "r" : "IE"
+                            "r" : "-"
                         },
                         "not" : "Bu türlerin ECOFF değerleri genel olarak C. albinans'ın değerlerinden daha yüksektir."
                     },
@@ -768,17 +724,15 @@
                         "degerler" : {
                             "s" : "0.5",
                             "i" : "1",
-                            "sdd" : "-",
                             "r" : "2"
                         }
                     },
                     {
                         "antifungal" : "İtrakonazol",
                         "degerler" : {
-                            "s" : "IE",
+                            "s" : "-",
                             "i" : "-",
-                            "sdd" : "-",
-                            "r" : "IE"
+                            "r" : "-"
                         },
                         "not" : "Bu türlerin ECOFF değerleri genel olarak C. albinans'ın değerlerinden daha yüksektir."
                     },
@@ -787,7 +741,6 @@
                         "degerler" : {
                             "s" : "R",
                             "i" : "R",
-                            "sdd" : "R",
                             "r" : "R"
                         }
                     },
@@ -796,7 +749,6 @@
                         "degerler" : {
                             "s" : "1",
                             "i" : "-",
-                            "sdd" : "-",
                             "r" : "2"
                         }
                     }
@@ -810,7 +762,6 @@
                         "degerler" : {
                             "s" : "2",
                             "i" : "4",
-                            "sdd" : "-",
                             "r" : "8"
                         }
                     },
@@ -819,7 +770,6 @@
                         "degerler" : {
                             "s" : "2",
                             "i" : "4",
-                            "sdd" : "-",
                             "r" : "8"
                         }
                     },
@@ -828,7 +778,6 @@
                         "degerler" : {
                             "s" : "2",
                             "i" : "4",
-                            "sdd" : "-",
                             "r" : "8"
                         }
                     },
@@ -837,7 +786,6 @@
                         "degerler" : {
                             "s" : "-",
                             "i" : "-",
-                            "sdd" : "-",
                             "r" : "-"
                         }
                     },
@@ -846,7 +794,6 @@
                         "degerler" : {
                             "s" : "0.06",
                             "i" : "-",
-                            "sdd" : "-",
                             "r" : "0.12"
                         }
                     },
@@ -855,7 +802,6 @@
                         "degerler" : {
                             "s" : "0.12",
                             "i" : "0.25-0.5",
-                            "sdd" : "-",
                             "r" : "1"
                         }
                     },
@@ -864,7 +810,6 @@
                         "degerler" : {
                             "s" : "0.12",
                             "i" : "-",
-                            "sdd" : "-",
                             "r" : "0.25"
                         }
                     },
@@ -873,7 +818,6 @@
                         "degerler" : {
                             "s" : "2",
                             "i" : "-",
-                            "sdd" : "4",
                             "r" : "8"
                         }
                     },
@@ -882,7 +826,6 @@
                         "degerler" : {
                             "s" : "1",
                             "i" : "-",
-                            "sdd" : "-",
                             "r" : "2"
                         }
                     }
@@ -896,7 +839,6 @@
                         "degerler" : {
                             "s" : "0.25",
                             "i" : "0.5",
-                            "sdd" : "-",
                             "r" : "1"
                         }
                     },
@@ -905,7 +847,6 @@
                         "degerler" : {
                             "s" : "0.25",
                             "i" : "0.5",
-                            "sdd" : "-",
                             "r" : "1"
                         }
                     },
@@ -914,7 +855,6 @@
                         "degerler" : {
                             "s" : "0.25",
                             "i" : "0.5",
-                            "sdd" : "-",
                             "r" : "1"
                         }
                     },
@@ -923,7 +863,6 @@
                         "degerler" : {
                             "s" : "-",
                             "i" : "-",
-                            "sdd" : "-",
                             "r" : "-"
                         }
                     },
@@ -932,7 +871,6 @@
                         "degerler" : {
                             "s" : "0.06",
                             "i" : "-",
-                            "sdd" : "-",
                             "r" : "0.12"
                         }
                     },
@@ -941,7 +879,6 @@
                         "degerler" : {
                             "s" : "0.12",
                             "i" : "0.25-0.5",
-                            "sdd" : "-",
                             "r" : "1"
                         }
                     },
@@ -950,7 +887,6 @@
                         "degerler" : {
                             "s" : "-",
                             "i" : "-",
-                            "sdd" : "-",
                             "r" : "-"
                         }
                     },
@@ -959,7 +895,6 @@
                         "degerler" : {
                             "s" : "2",
                             "i" : "-",
-                            "sdd" : "4",
                             "r" : "8"
                         }
                     },
@@ -968,7 +903,6 @@
                         "degerler" : {
                             "s" : "1",
                             "i" : "-",
-                            "sdd" : "-",
                             "r" : "2"
                         }
                     }
@@ -982,7 +916,6 @@
                         "degerler" : {
                             "s" : "2",
                             "i" : "4",
-                            "sdd" : "-",
                             "r" : "8"
                         }
                     },
@@ -991,7 +924,6 @@
                         "degerler" : {
                             "s" : "2",
                             "i" : "4",
-                            "sdd" : "-",
                             "r" : "8"
                         }
                     },
@@ -1000,7 +932,6 @@
                         "degerler" : {
                             "s" : "2",
                             "i" : "4",
-                            "sdd" : "-",
                             "r" : "8"
                         }
                     },
@@ -1009,56 +940,50 @@
                         "degerler" : {
                             "s" : "-",
                             "i" : "-",
-                            "sdd" : "-",
                             "r" : "-"
                         }
                     },
                     {
                         "antifungal" : "Posakonazol",
                         "degerler" : {
-                            "s" : "IE",
+                            "s" : "-",
                             "i" : "-",
-                            "sdd" : "-",
-                            "r" : "IE"
+                            "r" : "-"
                         },
                         "not" : "Bu türlerin ECOFF değerleri genel olarak C. albinans'ın değerlerinden daha yüksektir."
                     },
                     {
                         "antifungal" : "Vorikonazol",
                         "degerler" : {
-                            "s" : "IE",
+                            "s" : "-",
                             "i" : "-",
-                            "sdd" : "-",
-                            "r" : "IE"
+                            "r" : "-"
                         }
                     },
                     {
                         "antifungal" : "İtrakonazol",
                         "degerler" : {
-                            "s" : "IE",
+                            "s" : "-",
                             "i" : "-",
-                            "sdd" : "-",
-                            "r" : "IE"
+                            "r" : "-"
                         },
                         "not" : "Bu türlerin ECOFF değerleri genel olarak C. albinans'ın değerlerinden daha yüksektir."
                     },
                     {
                         "antifungal" : "Flukonazol",
                         "degerler" : {
-                            "s" : "IE",
+                            "s" : "-",
                             "i" : "-",
-                            "sdd" : "-",
-                            "r" : "IE"
+                            "r" : "-"
                         },
                         "not" : "Bu türlerin ECOFF değerleri genel olarak C. albinans'ın değerlerinden daha yüksektir."
                     },
                     {
                         "antifungal" : "Amfoterisin B",
                         "degerler" : {
-                            "s" : "IE",
+                            "s" : "-",
                             "i" : "-",
-                            "sdd" : "-",
-                            "r" : "IE"
+                            "r" : "-"
                         }
                     }
                 ]
@@ -1071,7 +996,6 @@
                         "degerler" : {
                             "s" : "-",
                             "i" : "-",
-                            "sdd" : "-",
                             "r" : "-"
                         }
                     },
@@ -1080,7 +1004,6 @@
                         "degerler" : {
                             "s" : "-",
                             "i" : "-",
-                            "sdd" : "-",
                             "r" : "-"
                         }
                     },
@@ -1089,7 +1012,6 @@
                         "degerler" : {
                             "s" : "-",
                             "i" : "-",
-                            "sdd" : "-",
                             "r" : "-"
                         }
                     },
@@ -1098,44 +1020,39 @@
                         "degerler" : {
                             "s" : "-",
                             "i" : "-",
-                            "sdd" : "-",
                             "r" : "-"
                         }
                     },
                     {
                         "antifungal" : "Posakonazol",
                         "degerler" : {
-                            "s" : "IE",
+                            "s" : "-",
                             "i" : "-",
-                            "sdd" : "-",
-                            "r" : "IE"
+                            "r" : "-"
                         }
                     },
                     {
                         "antifungal" : "Vorikonazol",
                         "degerler" : {
-                            "s" : "IE",
+                            "s" : "-",
                             "i" : "-",
-                            "sdd" : "-",
-                            "r" : "IE"
+                            "r" : "-"
                         }
                     },
                     {
                         "antifungal" : "İtrakonazol",
                         "degerler" : {
-                            "s" : "IE",
+                            "s" : "-",
                             "i" : "-",
-                            "sdd" : "-",
-                            "r" : "IE"
+                            "r" : "-"
                         }
                     },
                     {
                         "antifungal" : "Flukonazol",
                         "degerler" : {
-                            "s" : "IE",
+                            "s" : "-",
                             "i" : "-",
-                            "sdd" : "-",
-                            "r" : "IE"
+                            "r" : "-"
                         }
                     },
                     {
@@ -1143,7 +1060,6 @@
                         "degerler" : {
                             "s" : "1",
                             "i" : "-",
-                            "sdd" : "-",
                             "r" : "2"
                         }
                     }
@@ -1155,7 +1071,6 @@
     const GUIDE1_COLUMNS = [
       { key: 's', label: 'S \u2264' },
       { key: 'i', label: 'I' },
-      { key: 'sdd', label: 'SDD' },
       { key: 'r', label: 'R ≥' }
     ];
 
@@ -1636,19 +1551,33 @@
       const g1 = findMantar(GUIDE1_DATA, state.selectedMantarName);
 
       let html = '<h3>' + state.selectedMantarName + ' \u2014 Plaka Okuma Raporu</h3>';
+      let hasReport = false;
 
       PLATE_REPORT_ORDER.forEach(code => {
+        // Candida krusei için Flukonazol (FZ) doğal dirençli olduğundan raporda gösterilmez.
+        if (state.selectedMantarName === "Candida krusei" && code === "FZ") return;
+
         const name = PLATE_ANTIFUNGALS[code];
         const mic = getMIC(code);
         const bp1 = g1 ? g1.antifungaller.find(a => a.antifungal === name) : null;
         const cat1 = bp1 ? classifyBreakpoint(mic.value, bp1.degerler) : null;
 
-        html += '<div class="report-row">';
-        html += '<span class="report-name">' + name + '</span>';
-        html += '<span class="report-mic">MİK: ' + mic.text + '</span>';
-        if (cat1) html += '<span class="badge cat-' + cat1.cat + '">' + cat1.label + '</span>';
-        html += '</div>';
+        // Yalnızca değerlendirilebilir (S, I, R) sonucu olanlar eklenecek
+        if (cat1) {
+          hasReport = true;
+          html += '<div class="report-row">';
+          // İsim yerine kısaltma (code) kullanıldı
+          html += '<span class="report-name">' + code + '</span>';
+          html += '<span class="report-mic">MİK: ' + mic.text + '</span>';
+          html += '<span class="badge cat-' + cat1.cat + '">' + cat1.label + '</span>';
+          html += '</div>';
+        }
       });
+      
+      // Eğer hiç sonuç çıkmadıysa kullanıcıya belirtiyoruz
+      if (!hasReport) {
+        html += '<div class="hint">Bu mantar için raporlanabilir bir S/I/R sınır değeri bulunmamaktadır.</div>';
+      }
 
       el.innerHTML = html;
     }
