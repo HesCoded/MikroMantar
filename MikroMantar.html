@@ -154,9 +154,6 @@
     .guide-badge.guide1 {
       background: #1a5fb4;
     }
-    .guide-badge.guide2 {
-      background: #2a9d5c;
-    }
     .plate-panel {
       margin-top: 32px;
       background: #fff;
@@ -365,8 +362,8 @@
   </div>
 
   <script>
-    // data1.json ve data2.json içerikleri - dosyayı doğrudan çift tıklayarak (file://)
-    // açabilmek için burada gömülüdür. json dosyaları değişirse bu bloklar da güncellenmeli.
+    // data1.json içeriği - dosyayı doğrudan çift tıklayarak (file://)
+    // açabilmek için burada gömülüdür.
     const GUIDE1_DATA = {
         "mantarlar" : [
             {
@@ -1155,561 +1152,11 @@
         ]
     };
 
-    const GUIDE2_DATA = {
-        "mantarlar" : [
-            {
-                "mantar" : "Candida albicans",
-                "antifungaller" : [
-                    {
-                        "antifungal" : "Kaspofungin",
-                        "degerler" : {
-                            "s" : "0.25",
-                            "dbd" : "0.5",
-                            "r" : "1"
-                        }
-                    },
-                    {
-                        "antifungal" : "Vorikonazol",
-                        "degerler" : {
-                            "s" : "0.12",
-                            "dbd" : "0.25-0.5",
-                            "r" : "1"
-                        }
-                    },
-                    {
-                        "antifungal" : "İtrakonazol",
-                        "degerler" : {
-                            "s" : "-",
-                            "dbd" : "-",
-                            "r" : "-"
-                        }
-                    },
-                    {
-                        "antifungal" : "Flukonazol",
-                        "degerler" : {
-                            "s" : "2",
-                            "dbd" : "4",
-                            "r" : "8"
-                        }
-                    },
-                    {
-                        "antifungal" : "Amfoterisin B",
-                        "degerler" : {
-                            "s" : "2",
-                            "dbd" : "-",
-                            "r" : "4"
-                        }
-                    }
-                ]
-            },
-            {
-                "mantar" : "Candida parapsilosis",
-                "antifungaller" : [
-                    {
-                        "antifungal" : "Kaspofungin",
-                        "degerler" : {
-                            "s" : "2",
-                            "dbd" : "4",
-                            "r" : "8"
-                        }
-                    },
-                    {
-                        "antifungal" : "Vorikonazol",
-                        "degerler" : {
-                            "s" : "0.12",
-                            "dbd" : "0.25-0.5",
-                            "r" : "1"
-                        }
-                    },
-                    {
-                        "antifungal" : "İtrakonazol",
-                        "degerler" : {
-                            "s" : "-",
-                            "dbd" : "-",
-                            "r" : "-"
-                        }
-                    },
-                    {
-                        "antifungal" : "Flukonazol",
-                        "degerler" : {
-                            "s" : "2",
-                            "dbd" : "4",
-                            "r" : "8"
-                        }
-                    },
-                    {
-                        "antifungal" : "Amfoterisin B",
-                        "degerler" : {
-                            "s" : "2",
-                            "dbd" : "-",
-                            "r" : "4"
-                        }
-                    }
-                ]
-            },
-            {
-                "mantar" : "Candida tropicalis",
-                "antifungaller" : [
-                    {
-                        "antifungal" : "Kaspofungin",
-                        "degerler" : {
-                            "s" : "0.25",
-                            "dbd" : "0.5",
-                            "r" : "1"
-                        }
-                    },
-                    {
-                        "antifungal" : "Vorikonazol",
-                        "degerler" : {
-                            "s" : "0.12",
-                            "dbd" : "0.25-0.5",
-                            "r" : "1"
-                        }
-                    },
-                    {
-                        "antifungal" : "İtrakonazol",
-                        "degerler" : {
-                            "s" : "0.5",
-                            "dbd" : "-",
-                            "r" : "1"
-                        }
-                    },
-                    {
-                        "antifungal" : "Flukonazol",
-                        "degerler" : {
-                            "s" : "2",
-                            "dbd" : "4",
-                            "r" : "8"
-                        }
-                    },
-                    {
-                        "antifungal" : "Amfoterisin B",
-                        "degerler" : {
-                            "s" : "2",
-                            "dbd" : "-",
-                            "r" : "4"
-                        }
-                    }
-                ]
-            },
-            {
-                "mantar" : "Candida krusei",
-                "antifungaller" : [
-                    {
-                        "antifungal" : "Kaspofungin",
-                        "degerler" : {
-                            "s" : "0.25",
-                            "dbd" : "0.5",
-                            "r" : "1"
-                        }
-                    },
-                    {
-                        "antifungal" : "Vorikonazol",
-                        "degerler" : {
-                            "s" : "0.5",
-                            "dbd" : "1",
-                            "r" : "2"
-                        }
-                    },
-                    {
-                        "antifungal" : "İtrakonazol",
-                        "degerler" : {
-                            "s" : "1",
-                            "dbd" : "-",
-                            "r" : "2"
-                        }
-                    },
-                    {
-                        "antifungal" : "Flukonazol",
-                        "degerler" : {
-                            "s" : "R",
-                            "dbd" : "R",
-                            "r" : "R"
-                        }
-                    },
-                    {
-                        "antifungal" : "Amfoterisin B",
-                        "degerler" : {
-                            "s" : "2",
-                            "dbd" : "-",
-                            "r" : "4"
-                        }
-                    }
-                ]
-            },
-            {
-                "mantar" : "Candida glabrata",
-                "antifungaller" : [
-                    {
-                        "antifungal" : "Kaspofungin",
-                        "degerler" : {
-                            "s" : "0.12",
-                            "dbd" : "0.25",
-                            "r" : "0.5"
-                        }
-                    },
-                    {
-                        "antifungal" : "Vorikonazol",
-                        "degerler" : {
-                            "s" : "0.25",
-                            "dbd" : "-",
-                            "r" : "0.5"
-                        }
-                    },
-                    {
-                        "antifungal" : "İtrakonazol",
-                        "degerler" : {
-                            "s" : "4",
-                            "dbd" : "-",
-                            "r" : "8"
-                        }
-                    },
-                    {
-                        "antifungal" : "Flukonazol",
-                        "degerler" : {
-                            "s" : "16",
-                            "dbd" : "32",
-                            "r" : "64"
-                        }
-                    },
-                    {
-                        "antifungal" : "Amfoterisin B",
-                        "degerler" : {
-                            "s" : "2",
-                            "dbd" : "-",
-                            "r" : "4"
-                        }
-                    }
-                ]
-            },
-            {
-                "mantar" : "Candida lusitaniae",
-                "antifungaller" : [
-                    {
-                        "antifungal" : "Kaspofungin",
-                        "degerler" : {
-                            "s" : "-",
-                            "dbd" : "-",
-                            "r" : "-"
-                        }
-                    },
-                    {
-                        "antifungal" : "Vorikonazol",
-                        "degerler" : {
-                            "s" : "-",
-                            "dbd" : "-",
-                            "r" : "-"
-                        }
-                    },
-                    {
-                        "antifungal" : "İtrakonazol",
-                        "degerler" : {
-                            "s" : "1",
-                            "dbd" : "-",
-                            "r" : "2"
-                        }
-                    },
-                    {
-                        "antifungal" : "Flukonazol",
-                        "degerler" : {
-                            "s" : "1",
-                            "dbd" : "-",
-                            "r" : "2"
-                        }
-                    },
-                    {
-                        "antifungal" : "Amfoterisin B",
-                        "degerler" : {
-                            "s" : "R",
-                            "dbd" : "R",
-                            "r" : "R"
-                        }
-                    }
-                ]
-            },
-            {
-                "mantar" : "Candida guilliermondii",
-                "antifungaller" : [
-                    {
-                        "antifungal" : "Kaspofungin",
-                        "degerler" : {
-                            "s" : "2",
-                            "dbd" : "4",
-                            "r" : "8"
-                        }
-                    },
-                    {
-                        "antifungal" : "Vorikonazol",
-                        "degerler" : {
-                            "s" : "-",
-                            "dbd" : "-",
-                            "r" : "-"
-                        }
-                    },
-                    {
-                        "antifungal" : "İtrakonazol",
-                        "degerler" : {
-                            "s" : "-",
-                            "dbd" : "-",
-                            "r" : "-"
-                        }
-                    },
-                    {
-                        "antifungal" : "Flukonazol",
-                        "degerler" : {
-                            "s" : "8",
-                            "dbd" : "-",
-                            "r" : "16"
-                        }
-                    },
-                    {
-                        "antifungal" : "Amfoterisin B",
-                        "degerler" : {
-                            "s" : "-",
-                            "dbd" : "-",
-                            "r" : "-"
-                        }
-                    }
-                ]
-            },
-            {
-                "mantar" : "Candida dubliniensis",
-                "antifungaller" : [
-                    {
-                        "antifungal" : "Kaspofungin",
-                        "degerler" : {
-                            "s" : "-",
-                            "dbd" : "-",
-                            "r" : "-"
-                        }
-                    },
-                    {
-                        "antifungal" : "Vorikonazol",
-                        "degerler" : {
-                            "s" : "-",
-                            "dbd" : "-",
-                            "r" : "-"
-                        }
-                    },
-                    {
-                        "antifungal" : "İtrakonazol",
-                        "degerler" : {
-                            "s" : "-",
-                            "dbd" : "-",
-                            "r" : "-"
-                        }
-                    },
-                    {
-                        "antifungal" : "Flukonazol",
-                        "degerler" : {
-                            "s" : "0.5",
-                            "dbd" : "-",
-                            "r" : "1"
-                        }
-                    },
-                    {
-                        "antifungal" : "Amfoterisin B",
-                        "degerler" : {
-                            "s" : "-",
-                            "dbd" : "-",
-                            "r" : "-"
-                        }
-                    }
-                ]
-            },
-            {
-                "mantar" : "Aspergillus fumigatus",
-                "antifungaller" : [
-                    {
-                        "antifungal" : "Kaspofungin",
-                        "degerler" : {
-                            "s" : "0.5",
-                            "dbd" : "-",
-                            "r" : "1"
-                        }
-                    },
-                    {
-                        "antifungal" : "Vorikonazol",
-                        "degerler" : {
-                            "s" : "1",
-                            "dbd" : "-",
-                            "r" : "2"
-                        }
-                    },
-                    {
-                        "antifungal" : "İtrakonazol",
-                        "degerler" : {
-                            "s" : "1",
-                            "dbd" : "-",
-                            "r" : "2"
-                        }
-                    },
-                    {
-                        "antifungal" : "Flukonazol",
-                        "degerler" : {
-                            "s" : "-",
-                            "dbd" : "-",
-                            "r" : "-"
-                        }
-                    },
-                    {
-                        "antifungal" : "Amfoterisin B",
-                        "degerler" : {
-                            "s" : "2",
-                            "dbd" : "-",
-                            "r" : "4"
-                        }
-                    }
-                ]
-            },
-            {
-                "mantar" : "Aspergillus flavus",
-                "antifungaller" : [
-                    {
-                        "antifungal" : "Kaspofungin",
-                        "degerler" : {
-                            "s" : "0.5",
-                            "dbd" : "-",
-                            "r" : "1"
-                        }
-                    },
-                    {
-                        "antifungal" : "Vorikonazol",
-                        "degerler" : {
-                            "s" : "2",
-                            "dbd" : "-",
-                            "r" : "4"
-                        }
-                    },
-                    {
-                        "antifungal" : "İtrakonazol",
-                        "degerler" : {
-                            "s" : "1",
-                            "dbd" : "-",
-                            "r" : "2"
-                        }
-                    },
-                    {
-                        "antifungal" : "Flukonazol",
-                        "degerler" : {
-                            "s" : "-",
-                            "dbd" : "-",
-                            "r" : "-"
-                        }
-                    },
-                    {
-                        "antifungal" : "Amfoterisin B",
-                        "degerler" : {
-                            "s" : "4",
-                            "dbd" : "-",
-                            "r" : "8"
-                        }
-                    }
-                ]
-            },
-            {
-                "mantar" : "Aspergillus terreus",
-                "antifungaller" : [
-                    {
-                        "antifungal" : "Kaspofungin",
-                        "degerler" : {
-                            "s" : "0.25",
-                            "dbd" : "-",
-                            "r" : "0.5"
-                        }
-                    },
-                    {
-                        "antifungal" : "Vorikonazol",
-                        "degerler" : {
-                            "s" : "2",
-                            "dbd" : "-",
-                            "r" : "4"
-                        }
-                    },
-                    {
-                        "antifungal" : "İtrakonazol",
-                        "degerler" : {
-                            "s" : "2",
-                            "dbd" : "-",
-                            "r" : "4"
-                        }
-                    },
-                    {
-                        "antifungal" : "Flukonazol",
-                        "degerler" : {
-                            "s" : "-",
-                            "dbd" : "-",
-                            "r" : "-"
-                        }
-                    },
-                    {
-                        "antifungal" : "Amfoterisin B",
-                        "degerler" : {
-                            "s" : "R",
-                            "dbd" : "R",
-                            "r" : "R"
-                        }
-                    }
-                ]
-            },
-            {
-                "mantar" : "Aspergillus niger",
-                "antifungaller" : [
-                    {
-                        "antifungal" : "Kaspofungin",
-                        "degerler" : {
-                            "s" : "0.25",
-                            "dbd" : "-",
-                            "r" : "0.5"
-                        }
-                    },
-                    {
-                        "antifungal" : "Vorikonazol",
-                        "degerler" : {
-                            "s" : "2",
-                            "dbd" : "-",
-                            "r" : "4"
-                        }
-                    },
-                    {
-                        "antifungal" : "İtrakonazol",
-                        "degerler" : {
-                            "s" : "4",
-                            "dbd" : "-",
-                            "r" : "8"
-                        }
-                    },
-                    {
-                        "antifungal" : "Flukonazol",
-                        "degerler" : {
-                            "s" : "-",
-                            "dbd" : "-",
-                            "r" : "-"
-                        }
-                    },
-                    {
-                        "antifungal" : "Amfoterisin B",
-                        "degerler" : {
-                            "s" : "2",
-                            "dbd" : "-",
-                            "r" : "4"
-                        }
-                    }
-                ]
-            }
-        ]
-    };
-
     const GUIDE1_COLUMNS = [
       { key: 's', label: 'S \u2264' },
       { key: 'i', label: 'I' },
       { key: 'sdd', label: 'SDD' },
       { key: 'r', label: 'R ≥' }
-    ];
-    const GUIDE2_COLUMNS = [
-      { key: 's', label: 'S \u2264' },
-      { key: 'dbd', label: 'DBD' },
-      { key: 'r', label: 'R \u2265' }
     ];
 
     const state = {
@@ -1830,13 +1277,11 @@
     function getAllMantarNames() {
       const names = [];
       const seen = new Set();
-      [GUIDE1_DATA, GUIDE2_DATA].forEach(guide => {
-        (guide.mantarlar || []).forEach(m => {
-          if (!seen.has(m.mantar)) {
-            seen.add(m.mantar);
-            names.push(m.mantar);
-          }
-        });
+      (GUIDE1_DATA.mantarlar || []).forEach(m => {
+        if (!seen.has(m.mantar)) {
+          seen.add(m.mantar);
+          names.push(m.mantar);
+        }
       });
       return names;
     }
@@ -1844,17 +1289,15 @@
     function getAntifungalOptions(mantarName) {
       const names = [];
       const seen = new Set();
-      [GUIDE1_DATA, GUIDE2_DATA].forEach(guide => {
-        const m = findMantar(guide, mantarName);
-        if (m) {
-          m.antifungaller.forEach(a => {
-            if (!seen.has(a.antifungal)) {
-              seen.add(a.antifungal);
-              names.push(a.antifungal);
-            }
-          });
-        }
-      });
+      const m = findMantar(GUIDE1_DATA, mantarName);
+      if (m) {
+        m.antifungaller.forEach(a => {
+          if (!seen.has(a.antifungal)) {
+            seen.add(a.antifungal);
+            names.push(a.antifungal);
+          }
+        });
+      }
       return names;
     }
 
@@ -1894,33 +1337,29 @@
       }
 
       const g1 = findMantar(GUIDE1_DATA, state.selectedMantarName);
-      const g2 = findMantar(GUIDE2_DATA, state.selectedMantarName);
 
       const section1 = renderGuideSection('REHBER 1', 'guide1', g1, GUIDE1_COLUMNS, state.selectedAntifungal);
-      const section2 = renderGuideSection('REHBER 2', 'guide2', g2, GUIDE2_COLUMNS, state.selectedAntifungal);
 
-      if (!section1 && !section2) {
+      if (!section1) {
         resultsEl.innerHTML = '<h2>' + state.selectedMantarName + '</h2><div class="hint">Bu antifungal için veri bulunamadı.</div>';
         return;
       }
 
-      resultsEl.innerHTML = '<h2>' + state.selectedMantarName + '</h2>' + section1 + section2;
+      resultsEl.innerHTML = '<h2>' + state.selectedMantarName + '</h2>' + section1;
     }
 
-    // Seçili mantar (ve varsa seçili antifungal) için her iki rehberdeki "not" alanlarını toplar.
+    // Seçili mantar (ve varsa seçili antifungal) için Rehber 1'deki "not" alanlarını toplar.
     function getNotesForMantar(mantarName, selectedAntifungal) {
       const notes = [];
-      [
-        { data: findMantar(GUIDE1_DATA, mantarName), label: 'Rehber1' },
-        { data: findMantar(GUIDE2_DATA, mantarName), label: 'Rehber2' }
-      ].forEach(({ data, label }) => {
-        if (!data) return;
-        data.antifungaller.forEach(a => {
-          if (a.not && (!selectedAntifungal || a.antifungal === selectedAntifungal)) {
-            notes.push({ antifungal: a.antifungal, guideLabel: label, text: a.not });
-          }
-        });
+      const data = findMantar(GUIDE1_DATA, mantarName);
+      if (!data) return notes;
+      
+      data.antifungaller.forEach(a => {
+        if (a.not && (!selectedAntifungal || a.antifungal === selectedAntifungal)) {
+          notes.push({ antifungal: a.antifungal, text: a.not });
+        }
       });
+      
       return notes;
     }
 
@@ -1941,7 +1380,7 @@
 
       let html = '<h3>Notlar</h3>';
       notes.forEach(n => {
-        html += '<div class="note-row"><span class="note-tag">' + n.guideLabel + ' · ' + n.antifungal +
+        html += '<div class="note-row"><span class="note-tag">' + n.antifungal +
           '</span><p>' + n.text + '</p></div>';
       });
       el.innerHTML = html;
@@ -2195,7 +1634,6 @@
       }
 
       const g1 = findMantar(GUIDE1_DATA, state.selectedMantarName);
-      const g2 = findMantar(GUIDE2_DATA, state.selectedMantarName);
 
       let html = '<h3>' + state.selectedMantarName + ' \u2014 Plaka Okuma Raporu</h3>';
 
@@ -2203,15 +1641,12 @@
         const name = PLATE_ANTIFUNGALS[code];
         const mic = getMIC(code);
         const bp1 = g1 ? g1.antifungaller.find(a => a.antifungal === name) : null;
-        const bp2 = g2 ? g2.antifungaller.find(a => a.antifungal === name) : null;
         const cat1 = bp1 ? classifyBreakpoint(mic.value, bp1.degerler) : null;
-        const cat2 = bp2 ? classifyBreakpoint(mic.value, bp2.degerler) : null;
 
         html += '<div class="report-row">';
         html += '<span class="report-name">' + name + '</span>';
         html += '<span class="report-mic">MİK: ' + mic.text + '</span>';
-        if (cat1) html += '<span class="badge cat-' + cat1.cat + '">Rehber1: ' + cat1.label + '</span>';
-        if (cat2) html += '<span class="badge cat-' + cat2.cat + '">Rehber2: ' + cat2.label + '</span>';
+        if (cat1) html += '<span class="badge cat-' + cat1.cat + '">' + cat1.label + '</span>';
         html += '</div>';
       });
 
