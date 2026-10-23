@@ -412,7 +412,7 @@
 <body>
   <div class="container">
     <h1>MikroMantar <span class="version-badge">v1.1</span></h1>
-    <p class="subtitle">Mantar ve antifungal duyarlılık sorgulama</p>
+    <p class="subtitle">Antifungal duyarlılık sorgulama uygulaması</p>
 
     <div class="form-row">
       <div class="field" id="mantar-field">
@@ -428,13 +428,13 @@
     </div>
 
     <div class="results" id="results">
-      <div class="hint">Sonuçları görmek için bir mantar seçin.</div>
+      <div class="hint">Sonuçları görmek için bir mantar seçin</div>
     </div>
 
     <div class="notes-panel" id="notes-panel"></div>
 
     <div class="plate-panel">
-      <h2 class="plate-title">Sensititre YeastOne YO10 Paneli</h2>
+      <h2 class="plate-title">Sensititre YeastOne YO10 Plakası</h2>
       
       <div class="switch-wrap-container">
         <label class="switch-wrap">
@@ -800,7 +800,7 @@
 
     function renderResults() {
       if (!state.selectedMantarName) {
-        resultsEl.innerHTML = '<div class="hint">Sonuçları görmek için bir mantar seçin.</div>';
+        resultsEl.innerHTML = '<div class="hint">Sonuçları görmek için bir mantar seçin</div>';
         return;
       }
 
@@ -1127,7 +1127,7 @@
       if (!el) return;
 
       if (!state.selectedMantarName) {
-        el.innerHTML = '<div class="hint">MİK kategorilerini görmek için üstten bir mantar seçin.</div>';
+        el.innerHTML = '<div class="hint">Plaka okuma raporunu görmek için üstten bir mantar seçin</div>';
         return;
       }
 
