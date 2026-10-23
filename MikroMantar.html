@@ -23,6 +23,17 @@
       text-align: center;
       margin-bottom: 8px;
     }
+    .version-badge {
+      font-size: 14px;
+      color: #fff;
+      background-color: #6c757d;
+      padding: 3px 8px;
+      border-radius: 12px;
+      vertical-align: middle;
+      margin-left: 8px;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+    }
     .subtitle {
       text-align: center;
       color: #666;
@@ -117,24 +128,36 @@
       margin: 0 0 12px 0;
       color: #1a5fb4;
     }
-    table {
+
+    /* Düzenli Tablo Genişlikleri İçin Sabit Düzen */
+    .guide-table {
       width: 100%;
       border-collapse: collapse;
       font-size: 14px;
+      table-layout: fixed; /* Sütun genişliklerini zorunlu kılar */
     }
-    th, td {
-      text-align: left;
+    .guide-table th, .guide-table td {
       padding: 8px 10px;
       border-bottom: 1px solid #eee;
     }
-    th {
+    .guide-table th {
       background: #f0f4fa;
       color: #444;
       font-weight: bold;
     }
-    tr:last-child td {
+    .guide-table tr:last-child td {
       border-bottom: none;
     }
+    
+    /* Antifungal sütunu %40, diğerleri kalan %60'ı eşit paylaşır */
+    .col-antifungal {
+      width: 40%;
+      text-align: left;
+    }
+    .col-value {
+      text-align: center;
+    }
+
     .guide-section {
       margin-bottom: 20px;
     }
@@ -162,10 +185,59 @@
       padding: 16px;
     }
     .plate-title {
-      margin: 0 0 4px;
+      margin: 0 0 12px;
       font-size: 17px;
       color: #1a5fb4;
     }
+
+    /* Switch CSS */
+    .switch-wrap-container {
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #eee;
+    }
+    .switch-wrap {
+      display: inline-flex;
+      align-items: center;
+      cursor: pointer;
+    }
+    .switch-wrap input {
+      display: none;
+    }
+    .switch-slider {
+      position: relative;
+      width: 42px;
+      height: 22px;
+      background-color: #ccc;
+      border-radius: 24px;
+      transition: 0.3s;
+      margin-right: 10px;
+    }
+    .switch-slider::before {
+      content: "";
+      position: absolute;
+      height: 16px;
+      width: 16px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      border-radius: 50%;
+      transition: 0.3s;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }
+    .switch-wrap input:checked + .switch-slider {
+      background-color: #2a9d5c;
+    }
+    .switch-wrap input:checked + .switch-slider::before {
+      transform: translateX(20px);
+    }
+    .switch-label {
+      font-size: 14px;
+      font-weight: bold;
+      color: #444;
+      user-select: none;
+    }
+
     .plate-hint {
       margin: 0 0 16px;
       font-size: 13px;
@@ -175,7 +247,10 @@
       overflow-x: auto;
       padding-bottom: 4px;
     }
+    
+    /* Plaka Tablosu: width: 100% eklenerek genişliğin yeniden tüm alana yayılması sağlandı */
     .plate-table {
+      width: 100%;
       border-collapse: collapse;
       margin: 0 auto;
     }
@@ -209,6 +284,7 @@
       border: 2px solid rgba(0, 0, 0, 0.08);
       user-select: none;
       margin: 0 auto;
+      position: relative;
     }
     .well .well-code {
       font-weight: bold;
@@ -223,6 +299,13 @@
       background: #b3175f;
       cursor: default;
     }
+    
+    /* MİK kutucuğu: Genişliği artırmayan içeri doğru 4px siyah çerçeve */
+    .well.mic-selected {
+      border: 4px solid #1a1a1a;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
+    }
+    
     .well:hover:not(.well-pos) {
       filter: brightness(1.1);
     }
@@ -279,7 +362,8 @@
     .badge.cat-s {
       background: #2a9d5c;
     }
-    .badge.cat-i {
+    .badge.cat-i,
+    .badge.cat-sdd {
       background: #d99a00;
     }
     .badge.cat-r {
@@ -327,7 +411,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>MikroMantar</h1>
+    <h1>MikroMantar <span class="version-badge">v1.1</span></h1>
     <p class="subtitle">Mantar ve antifungal duyarlılık sorgulama</p>
 
     <div class="form-row">
@@ -351,7 +435,18 @@
 
     <div class="plate-panel">
       <h2 class="plate-title">Sensititre YeastOne YO10 Paneli</h2>
-      <p class="plate-hint">Üreme gördüğünüz en yüksek konsantrasyonlu kuyucuğa tıklayın; o kuyucuk ve solundaki (daha düşük konsantrasyonlu) kuyucuklar pembe olur. Aynı kuyucuğa tekrar tıklarsanız sıfırlanır.</p>
+      
+      <div class="switch-wrap-container">
+        <label class="switch-wrap">
+          <!-- Varsayılan checkbox -->
+          <input type="checkbox" id="read-mode-switch" checked>
+          <span class="switch-slider"></span>
+          <span class="switch-label" id="switch-label-text">MİK değeri seçiliyor</span>
+        </label>
+      </div>
+
+      <p class="plate-hint" id="plate-hint-text"></p>
+
       <div class="plate-scroll">
         <table class="plate-table" id="plate-table"></table>
       </div>
@@ -366,717 +461,136 @@
             {
                 "mantar" : "Candida albicans",
                 "antifungaller" : [
-                    {
-                        "antifungal" : "Anidulafungin",
-                        "degerler" : {
-                            "s" : "0.25",
-                            "i" : "0.5",
-                            "r" : "1"
-                        }
-                    },
-                    {
-                        "antifungal" : "Mikafungin",
-                        "degerler" : {
-                            "s" : "0.25",
-                            "i" : "0.5",
-                            "r" : "1"
-                        }
-                    },
-                    {
-                        "antifungal" : "Kaspofungin",
-                        "degerler" : {
-                            "s" : "0.25",
-                            "i" : "0.5",
-                            "r" : "1"
-                        }
-                    },
-                    {
-                        "antifungal" : "5-Flusitozin",
-                        "degerler" : {
-                            "s" : "-",
-                            "i" : "-",
-                            "r" : "-"
-                        }
-                    },
-                    {
-                        "antifungal" : "Posakonazol",
-                        "degerler" : {
-                            "s" : "2",
-                            "i" : "-",
-                            "r" : "4"
-                        }
-                    },
-                    {
-                        "antifungal" : "Vorikonazol",
-                        "degerler" : {
-                            "s" : "0.12",
-                            "i" : "0.25-0.5",
-                            "r" : "1"
-                        }
-                    },
-                    {
-                        "antifungal" : "İtrakonazol",
-                        "degerler" : {
-                            "s" : "0.06",
-                            "i" : "-",
-                            "r" : "0.12"
-                        }
-                    },
-                    {
-                        "antifungal" : "Flukonazol",
-                        "degerler" : {
-                            "s" : "2",
-                            "i" : "4",
-                            "r" : "8"
-                        }
-                    },
-                    {
-                        "antifungal" : "Amfoterisin B",
-                        "degerler" : {
-                            "s" : "1",
-                            "i" : "-",
-                            "r" : "2"
-                        }
-                    }
+                    { "antifungal" : "Anidulafungin", "degerler" : { "s" : "0.25", "i" : "0.5", "r" : "1" } },
+                    { "antifungal" : "Mikafungin", "degerler" : { "s" : "0.25", "i" : "0.5", "r" : "1" } },
+                    { "antifungal" : "Kaspofungin", "degerler" : { "s" : "0.25", "i" : "0.5", "r" : "1" } },
+                    { "antifungal" : "5-Flusitozin", "degerler" : { "s" : "-", "i" : "-", "r" : "-" } },
+                    { "antifungal" : "Posakonazol", "degerler" : { "s" : "2", "i" : "-", "r" : "4" } },
+                    { "antifungal" : "Vorikonazol", "degerler" : { "s" : "0.12", "i" : "0.25-0.5", "r" : "1" } },
+                    { "antifungal" : "İtrakonazol", "degerler" : { "s" : "0.06", "i" : "-", "r" : "0.12" } },
+                    { "antifungal" : "Flukonazol", "degerler" : { "s" : "2", "i" : "-", "sdd" : "4", "r" : "8" } },
+                    { "antifungal" : "Amfoterisin B", "degerler" : { "s" : "1", "i" : "-", "r" : "2" } }
                 ]
             },
             {
                 "mantar" : "Candida auris",
                 "antifungaller" : [
-                    {
-                        "antifungal" : "Anidulafungin",
-                        "degerler" : {
-                            "s" : "0.25",
-                            "i" : "-",
-                            "r" : "0.5"
-                        }
-                    },
-                    {
-                        "antifungal" : "Mikafungin",
-                        "degerler" : {
-                            "s" : "0.25",
-                            "i" : "-",
-                            "r" : "0.5"
-                        }
-                    },
-                    {
-                        "antifungal" : "Kaspofungin",
-                        "degerler" : {
-                            "s" : "-",
-                            "i" : "-",
-                            "r" : "-"
-                        }
-                    },
-                    {
-                        "antifungal" : "5-Flusitozin",
-                        "degerler" : {
-                            "s" : "-",
-                            "i" : "-",
-                            "r" : "-"
-                        }
-                    },
-                    {
-                        "antifungal" : "Posakonazol",
-                        "degerler" : {
-                            "s" : "-",
-                            "i" : "-",
-                            "r" : "-"
-                        }
-                    },
-                    {
-                        "antifungal" : "Vorikonazol",
-                        "degerler" : {
-                            "s" : "-",
-                            "i" : "-",
-                            "r" : "-"
-                        }
-                    },
-                    {
-                        "antifungal" : "İtrakonazol",
-                        "degerler" : {
-                            "s" : "-",
-                            "i" : "-",
-                            "r" : "-"
-                        }
-                    },
-                    {
-                        "antifungal" : "Flukonazol",
-                        "degerler" : {
-                            "s" : "16",
-                            "i" : "-",
-                            "r" : "32"
-                        },
-                        "not" : "Çoğu C. auris izolatı > 16 mg/L flukonazol MİK değerine sahiptir ve edinilmiş direnç mekanizmaları vardır. Daha düşük MİK değerine sahip izolatlar için klinik veriler sınırlıdır. EUCAST'in MİK düşük olsa bile flukonazol tedavisini destekleyecek yeterli verisi yoktur."
-                    },
-                    {
-                        "antifungal" : "Amfoterisin B",
-                        "degerler" : {
-                            "s" : "0.001",
-                            "i" : "-",
-                            "r" : "2"
-                        },
-                        "not" : "C. auris vahşi tip popülasyonunun tamamı Amfoterisin B için I kategorisindedir. Duyarlı kategori (<0.001 mg/L), herhangi bir vahşi tip suşunun S suşu olarak yanlış sınıflandırılmasını önlemek içindir."
-                    }
+                    { "antifungal" : "Anidulafungin", "degerler" : { "s" : "0.25", "i" : "-", "r" : "0.5" } },
+                    { "antifungal" : "Mikafungin", "degerler" : { "s" : "0.25", "i" : "-", "r" : "0.5" } },
+                    { "antifungal" : "Kaspofungin", "degerler" : { "s" : "-", "i" : "-", "r" : "-" } },
+                    { "antifungal" : "5-Flusitozin", "degerler" : { "s" : "-", "i" : "-", "r" : "-" } },
+                    { "antifungal" : "Posakonazol", "degerler" : { "s" : "-", "i" : "-", "r" : "-" } },
+                    { "antifungal" : "Vorikonazol", "degerler" : { "s" : "-", "i" : "-", "r" : "-" } },
+                    { "antifungal" : "İtrakonazol", "degerler" : { "s" : "-", "i" : "-", "r" : "-" } },
+                    { "antifungal" : "Flukonazol", "degerler" : { "s" : "16", "i" : "-", "r" : "32" }, "not" : "Çoğu C. auris izolatı > 16 mg/L flukonazol MİK değerine sahiptir ve edinilmiş direnç mekanizmaları vardır." },
+                    { "antifungal" : "Amfoterisin B", "degerler" : { "s" : "0.001", "i" : "-", "r" : "2" }, "not" : "C. auris vahşi tip popülasyonunun tamamı Amfoterisin B için I kategorisindedir." }
                 ]
             },
             {
                 "mantar" : "Candida dubliniensis",
                 "antifungaller" : [
-                    {
-                        "antifungal" : "Anidulafungin",
-                        "degerler" : {
-                            "s" : "0.03",
-                            "i" : "-",
-                            "r" : "0.06"
-                        }
-                    },
-                    {
-                        "antifungal" : "Mikafungin",
-                        "degerler" : {
-                            "s" : "0.06",
-                            "i" : "-",
-                            "r" : "0.12"
-                        }
-                    },
-                    {
-                        "antifungal" : "Kaspofungin",
-                        "degerler" : {
-                            "s" : "-",
-                            "i" : "-",
-                            "r" : "-"
-                        }
-                    },
-                    {
-                        "antifungal" : "5-Flusitozin",
-                        "degerler" : {
-                            "s" : "-",
-                            "i" : "-",
-                            "r" : "-"
-                        }
-                    },
-                    {
-                        "antifungal" : "Posakonazol",
-                        "degerler" : {
-                            "s" : "0.06",
-                            "i" : "-",
-                            "r" : "0.12"
-                        }
-                    },
-                    {
-                        "antifungal" : "Vorikonazol",
-                        "degerler" : {
-                            "s" : "0.06",
-                            "i" : "-",
-                            "r" : "0.25"
-                        }
-                    },
-                    {
-                        "antifungal" : "İtrakonazol",
-                        "degerler" : {
-                            "s" : "0.06",
-                            "i" : "-",
-                            "r" : "0.12"
-                        }
-                    },
-                    {
-                        "antifungal" : "Flukonazol",
-                        "degerler" : {
-                            "s" : "2",
-                            "i" : "-",
-                            "r" : "4"
-                        }
-                    },
-                    {
-                        "antifungal" : "Amfoterisin B",
-                        "degerler" : {
-                            "s" : "1",
-                            "i" : "-",
-                            "r" : "2"
-                        }
-                    }
+                    { "antifungal" : "Anidulafungin", "degerler" : { "s" : "0.03", "i" : "-", "r" : "0.06" } },
+                    { "antifungal" : "Mikafungin", "degerler" : { "s" : "0.06", "i" : "-", "r" : "0.12" } },
+                    { "antifungal" : "Kaspofungin", "degerler" : { "s" : "-", "i" : "-", "r" : "-" } },
+                    { "antifungal" : "5-Flusitozin", "degerler" : { "s" : "-", "i" : "-", "r" : "-" } },
+                    { "antifungal" : "Posakonazol", "degerler" : { "s" : "0.06", "i" : "-", "r" : "0.12" } },
+                    { "antifungal" : "Vorikonazol", "degerler" : { "s" : "0.06", "i" : "0.12", "r" : "0.25" } },
+                    { "antifungal" : "İtrakonazol", "degerler" : { "s" : "0.06", "i" : "-", "r" : "0.12" } },
+                    { "antifungal" : "Flukonazol", "degerler" : { "s" : "2", "i" : "-", "r" : "4" } },
+                    { "antifungal" : "Amfoterisin B", "degerler" : { "s" : "1", "i" : "-", "r" : "2" } }
                 ]
             },
             {
                 "mantar" : "Candida glabrata",
                 "antifungaller" : [
-                    {
-                        "antifungal" : "Anidulafungin",
-                        "degerler" : {
-                            "s" : "0.12",
-                            "i" : "0.25",
-                            "r" : "0.5"
-                        }
-                    },
-                    {
-                        "antifungal" : "Mikafungin",
-                        "degerler" : {
-                            "s" : "0.06",
-                            "i" : "0.12",
-                            "r" : "0.25"
-                        }
-                    },
-                    {
-                        "antifungal" : "Kaspofungin",
-                        "degerler" : {
-                            "s" : "0.12",
-                            "i" : "0.25",
-                            "r" : "0.5"
-                        }
-                    },
-                    {
-                        "antifungal" : "5-Flusitozin",
-                        "degerler" : {
-                            "s" : "-",
-                            "i" : "-",
-                            "r" : "-"
-                        }
-                    },
-                    {
-                        "antifungal" : "Posakonazol",
-                        "degerler" : {
-                            "s" : "-",
-                            "i" : "-",
-                            "r" : "-"
-                        },
-                        "not" : "Bu türlerin ECOFF değerleri genel olarak C. albinans'ın değerlerinden daha yüksektir."
-                    },
-                    {
-                        "antifungal" : "Vorikonazol",
-                        "degerler" : {
-                            "s" : "-",
-                            "i" : "-",
-                            "r" : "-"
-                        }
-                    },
-                    {
-                        "antifungal" : "İtrakonazol",
-                        "degerler" : {
-                            "s" : "-",
-                            "i" : "-",
-                            "r" : "-"
-                        },
-                        "not" : "Bu türlerin ECOFF değerleri genel olarak C. albinans'ın değerlerinden daha yüksektir."
-                    },
-                    {
-                        "antifungal" : "Flukonazol",
-                        "degerler" : {
-                            "s" : "16",
-                            "i" : "32",
-                            "r" : "64"
-                        }
-                    },
-                    {
-                        "antifungal" : "Amfoterisin B",
-                        "degerler" : {
-                            "s" : "1",
-                            "i" : "-",
-                            "r" : "2"
-                        }
-                    }
+                    { "antifungal" : "Anidulafungin", "degerler" : { "s" : "0.12", "i" : "0.25", "r" : "0.5" } },
+                    { "antifungal" : "Mikafungin", "degerler" : { "s" : "0.06", "i" : "0.12", "r" : "0.25" } },
+                    { "antifungal" : "Kaspofungin", "degerler" : { "s" : "0.12", "i" : "0.25", "r" : "0.5" } },
+                    { "antifungal" : "5-Flusitozin", "degerler" : { "s" : "-", "i" : "-", "r" : "-" } },
+                    { "antifungal" : "Posakonazol", "degerler" : { "s" : "-", "i" : "-", "r" : "-" }, "not" : "Bu türlerin ECOFF değerleri genel olarak C. albinans'ın değerlerinden daha yüksektir." },
+                    { "antifungal" : "Vorikonazol", "degerler" : { "s" : "-", "i" : "-", "r" : "-" } },
+                    { "antifungal" : "İtrakonazol", "degerler" : { "s" : "-", "i" : "-", "r" : "-" }, "not" : "Bu türlerin ECOFF değerleri genel olarak C. albinans'ın değerlerinden daha yüksektir." },
+                    { "antifungal" : "Flukonazol", "degerler" : { "s" : "16", "i" : "-", "sdd" : "32", "r" : "64" } },
+                    { "antifungal" : "Amfoterisin B", "degerler" : { "s" : "1", "i" : "-", "r" : "2" } }
                 ]
             },
             {
                 "mantar" : "Candida krusei",
                 "antifungaller" : [
-                    {
-                        "antifungal" : "Anidulafungin",
-                        "degerler" : {
-                            "s" : "0.25",
-                            "i" : "0.5",
-                            "r" : "1"
-                        }
-                    },
-                    {
-                        "antifungal" : "Mikafungin",
-                        "degerler" : {
-                            "s" : "0.25",
-                            "i" : "0.5",
-                            "r" : "1"
-                        }
-                    },
-                    {
-                        "antifungal" : "Kaspofungin",
-                        "degerler" : {
-                            "s" : "0.25",
-                            "i" : "0.5",
-                            "r" : "1"
-                        }
-                    },
-                    {
-                        "antifungal" : "5-Flusitozin",
-                        "degerler" : {
-                            "s" : "-",
-                            "i" : "-",
-                            "r" : "-"
-                        }
-                    },
-                    {
-                        "antifungal" : "Posakonazol",
-                        "degerler" : {
-                            "s" : "-",
-                            "i" : "-",
-                            "r" : "-"
-                        },
-                        "not" : "Bu türlerin ECOFF değerleri genel olarak C. albinans'ın değerlerinden daha yüksektir."
-                    },
-                    {
-                        "antifungal" : "Vorikonazol",
-                        "degerler" : {
-                            "s" : "0.5",
-                            "i" : "1",
-                            "r" : "2"
-                        }
-                    },
-                    {
-                        "antifungal" : "İtrakonazol",
-                        "degerler" : {
-                            "s" : "-",
-                            "i" : "-",
-                            "r" : "-"
-                        },
-                        "not" : "Bu türlerin ECOFF değerleri genel olarak C. albinans'ın değerlerinden daha yüksektir."
-                    },
-                    {
-                        "antifungal" : "Flukonazol",
-                        "degerler" : {
-                            "s" : "R",
-                            "i" : "R",
-                            "r" : "R"
-                        }
-                    },
-                    {
-                        "antifungal" : "Amfoterisin B",
-                        "degerler" : {
-                            "s" : "1",
-                            "i" : "-",
-                            "r" : "2"
-                        }
-                    }
+                    { "antifungal" : "Anidulafungin", "degerler" : { "s" : "0.25", "i" : "0.5", "r" : "1" } },
+                    { "antifungal" : "Mikafungin", "degerler" : { "s" : "0.25", "i" : "0.5", "r" : "1" } },
+                    { "antifungal" : "Kaspofungin", "degerler" : { "s" : "0.25", "i" : "0.5", "r" : "1" } },
+                    { "antifungal" : "5-Flusitozin", "degerler" : { "s" : "-", "i" : "-", "r" : "-" } },
+                    { "antifungal" : "Posakonazol", "degerler" : { "s" : "-", "i" : "-", "r" : "-" }, "not" : "Bu türlerin ECOFF değerleri genel olarak C. albinans'ın değerlerinden daha yüksektir." },
+                    { "antifungal" : "Vorikonazol", "degerler" : { "s" : "0.5", "i" : "1", "r" : "2" } },
+                    { "antifungal" : "İtrakonazol", "degerler" : { "s" : "-", "i" : "-", "r" : "-" }, "not" : "Bu türlerin ECOFF değerleri genel olarak C. albinans'ın değerlerinden daha yüksektir." },
+                    { "antifungal" : "Flukonazol", "degerler" : { "s" : "R", "i" : "R", "r" : "R" } },
+                    { "antifungal" : "Amfoterisin B", "degerler" : { "s" : "1", "i" : "-", "r" : "2" } }
                 ]
             },
             {
                 "mantar" : "Candida parapsilosis",
                 "antifungaller" : [
-                    {
-                        "antifungal" : "Anidulafungin",
-                        "degerler" : {
-                            "s" : "2",
-                            "i" : "4",
-                            "r" : "8"
-                        }
-                    },
-                    {
-                        "antifungal" : "Mikafungin",
-                        "degerler" : {
-                            "s" : "2",
-                            "i" : "4",
-                            "r" : "8"
-                        }
-                    },
-                    {
-                        "antifungal" : "Kaspofungin",
-                        "degerler" : {
-                            "s" : "2",
-                            "i" : "4",
-                            "r" : "8"
-                        }
-                    },
-                    {
-                        "antifungal" : "5-Flusitozin",
-                        "degerler" : {
-                            "s" : "-",
-                            "i" : "-",
-                            "r" : "-"
-                        }
-                    },
-                    {
-                        "antifungal" : "Posakonazol",
-                        "degerler" : {
-                            "s" : "0.06",
-                            "i" : "-",
-                            "r" : "0.12"
-                        }
-                    },
-                    {
-                        "antifungal" : "Vorikonazol",
-                        "degerler" : {
-                            "s" : "0.12",
-                            "i" : "0.25-0.5",
-                            "r" : "1"
-                        }
-                    },
-                    {
-                        "antifungal" : "İtrakonazol",
-                        "degerler" : {
-                            "s" : "0.12",
-                            "i" : "-",
-                            "r" : "0.25"
-                        }
-                    },
-                    {
-                        "antifungal" : "Flukonazol",
-                        "degerler" : {
-                            "s" : "2",
-                            "i" : "-",
-                            "r" : "8"
-                        }
-                    },
-                    {
-                        "antifungal" : "Amfoterisin B",
-                        "degerler" : {
-                            "s" : "1",
-                            "i" : "-",
-                            "r" : "2"
-                        }
-                    }
+                    { "antifungal" : "Anidulafungin", "degerler" : { "s" : "2", "i" : "4", "r" : "8" } },
+                    { "antifungal" : "Mikafungin", "degerler" : { "s" : "2", "i" : "4", "r" : "8" } },
+                    { "antifungal" : "Kaspofungin", "degerler" : { "s" : "2", "i" : "4", "r" : "8" } },
+                    { "antifungal" : "5-Flusitozin", "degerler" : { "s" : "-", "i" : "-", "r" : "-" } },
+                    { "antifungal" : "Posakonazol", "degerler" : { "s" : "0.06", "i" : "-", "r" : "0.12" } },
+                    { "antifungal" : "Vorikonazol", "degerler" : { "s" : "0.12", "i" : "0.25-0.5", "r" : "1" } },
+                    { "antifungal" : "İtrakonazol", "degerler" : { "s" : "0.12", "i" : "-", "r" : "0.25" } },
+                    { "antifungal" : "Flukonazol", "degerler" : { "s" : "2", "i" : "4", "r" : "8" } },
+                    { "antifungal" : "Amfoterisin B", "degerler" : { "s" : "1", "i" : "-", "r" : "2" } }
                 ]
             },
             {
                 "mantar" : "Candida tropicalis",
                 "antifungaller" : [
-                    {
-                        "antifungal" : "Anidulafungin",
-                        "degerler" : {
-                            "s" : "0.25",
-                            "i" : "0.5",
-                            "r" : "1"
-                        }
-                    },
-                    {
-                        "antifungal" : "Mikafungin",
-                        "degerler" : {
-                            "s" : "0.25",
-                            "i" : "0.5",
-                            "r" : "1"
-                        }
-                    },
-                    {
-                        "antifungal" : "Kaspofungin",
-                        "degerler" : {
-                            "s" : "0.25",
-                            "i" : "0.5",
-                            "r" : "1"
-                        }
-                    },
-                    {
-                        "antifungal" : "5-Flusitozin",
-                        "degerler" : {
-                            "s" : "-",
-                            "i" : "-",
-                            "r" : "-"
-                        }
-                    },
-                    {
-                        "antifungal" : "Posakonazol",
-                        "degerler" : {
-                            "s" : "0.06",
-                            "i" : "-",
-                            "r" : "0.12"
-                        }
-                    },
-                    {
-                        "antifungal" : "Vorikonazol",
-                        "degerler" : {
-                            "s" : "0.12",
-                            "i" : "0.25-0.5",
-                            "r" : "1"
-                        }
-                    },
-                    {
-                        "antifungal" : "İtrakonazol",
-                        "degerler" : {
-                            "s" : "-",
-                            "i" : "-",
-                            "r" : "-"
-                        }
-                    },
-                    {
-                        "antifungal" : "Flukonazol",
-                        "degerler" : {
-                            "s" : "2",
-                            "i" : "-",
-                            "r" : "8"
-                        }
-                    },
-                    {
-                        "antifungal" : "Amfoterisin B",
-                        "degerler" : {
-                            "s" : "1",
-                            "i" : "-",
-                            "r" : "2"
-                        }
-                    }
+                    { "antifungal" : "Anidulafungin", "degerler" : { "s" : "0.25", "i" : "0.5", "r" : "1" } },
+                    { "antifungal" : "Mikafungin", "degerler" : { "s" : "0.25", "i" : "0.5", "r" : "1" } },
+                    { "antifungal" : "Kaspofungin", "degerler" : { "s" : "0.25", "i" : "0.5", "r" : "1" } },
+                    { "antifungal" : "5-Flusitozin", "degerler" : { "s" : "-", "i" : "-", "r" : "-" } },
+                    { "antifungal" : "Posakonazol", "degerler" : { "s" : "0.06", "i" : "-", "r" : "0.12" } },
+                    { "antifungal" : "Vorikonazol", "degerler" : { "s" : "0.12", "i" : "0.25-0.5", "r" : "1" } },
+                    { "antifungal" : "İtrakonazol", "degerler" : { "s" : "-", "i" : "-", "r" : "-" } },
+                    { "antifungal" : "Flukonazol", "degerler" : { "s" : "2", "i" : "-", "sdd" : "4", "r" : "8" } },
+                    { "antifungal" : "Amfoterisin B", "degerler" : { "s" : "1", "i" : "-", "r" : "2" } }
                 ]
             },
             {
                 "mantar" : "Candida guilliermondii",
                 "antifungaller" : [
-                    {
-                        "antifungal" : "Anidulafungin",
-                        "degerler" : {
-                            "s" : "2",
-                            "i" : "4",
-                            "r" : "8"
-                        }
-                    },
-                    {
-                        "antifungal" : "Mikafungin",
-                        "degerler" : {
-                            "s" : "2",
-                            "i" : "4",
-                            "r" : "8"
-                        }
-                    },
-                    {
-                        "antifungal" : "Kaspofungin",
-                        "degerler" : {
-                            "s" : "2",
-                            "i" : "4",
-                            "r" : "8"
-                        }
-                    },
-                    {
-                        "antifungal" : "5-Flusitozin",
-                        "degerler" : {
-                            "s" : "-",
-                            "i" : "-",
-                            "r" : "-"
-                        }
-                    },
-                    {
-                        "antifungal" : "Posakonazol",
-                        "degerler" : {
-                            "s" : "-",
-                            "i" : "-",
-                            "r" : "-"
-                        },
-                        "not" : "Bu türlerin ECOFF değerleri genel olarak C. albinans'ın değerlerinden daha yüksektir."
-                    },
-                    {
-                        "antifungal" : "Vorikonazol",
-                        "degerler" : {
-                            "s" : "-",
-                            "i" : "-",
-                            "r" : "-"
-                        }
-                    },
-                    {
-                        "antifungal" : "İtrakonazol",
-                        "degerler" : {
-                            "s" : "-",
-                            "i" : "-",
-                            "r" : "-"
-                        },
-                        "not" : "Bu türlerin ECOFF değerleri genel olarak C. albinans'ın değerlerinden daha yüksektir."
-                    },
-                    {
-                        "antifungal" : "Flukonazol",
-                        "degerler" : {
-                            "s" : "-",
-                            "i" : "-",
-                            "r" : "-"
-                        },
-                        "not" : "Bu türlerin ECOFF değerleri genel olarak C. albinans'ın değerlerinden daha yüksektir."
-                    },
-                    {
-                        "antifungal" : "Amfoterisin B",
-                        "degerler" : {
-                            "s" : "-",
-                            "i" : "-",
-                            "r" : "-"
-                        }
-                    }
+                    { "antifungal" : "Anidulafungin", "degerler" : { "s" : "2", "i" : "4", "r" : "8" } },
+                    { "antifungal" : "Mikafungin", "degerler" : { "s" : "2", "i" : "4", "r" : "8" } },
+                    { "antifungal" : "Kaspofungin", "degerler" : { "s" : "2", "i" : "4", "r" : "8" } },
+                    { "antifungal" : "5-Flusitozin", "degerler" : { "s" : "-", "i" : "-", "r" : "-" } },
+                    { "antifungal" : "Posakonazol", "degerler" : { "s" : "-", "i" : "-", "r" : "-" }, "not" : "Bu türlerin ECOFF değerleri genel olarak C. albinans'ın değerlerinden daha yüksektir." },
+                    { "antifungal" : "Vorikonazol", "degerler" : { "s" : "-", "i" : "-", "r" : "-" } },
+                    { "antifungal" : "İtrakonazol", "degerler" : { "s" : "-", "i" : "-", "r" : "-" }, "not" : "Bu türlerin ECOFF değerleri genel olarak C. albinans'ın değerlerinden daha yüksektir." },
+                    { "antifungal" : "Flukonazol", "degerler" : { "s" : "-", "i" : "-", "r" : "-" }, "not" : "Bu türlerin ECOFF değerleri genel olarak C. albinans'ın değerlerinden daha yüksektir." },
+                    { "antifungal" : "Amfoterisin B", "degerler" : { "s" : "-", "i" : "-", "r" : "-" } }
                 ]
             },
             {
                 "mantar" : "Cryptococcus neoformans",
                 "antifungaller" : [
-                    {
-                        "antifungal" : "Anidulafungin",
-                        "degerler" : {
-                            "s" : "-",
-                            "i" : "-",
-                            "r" : "-"
-                        }
-                    },
-                    {
-                        "antifungal" : "Mikafungin",
-                        "degerler" : {
-                            "s" : "-",
-                            "i" : "-",
-                            "r" : "-"
-                        }
-                    },
-                    {
-                        "antifungal" : "Kaspofungin",
-                        "degerler" : {
-                            "s" : "-",
-                            "i" : "-",
-                            "r" : "-"
-                        }
-                    },
-                    {
-                        "antifungal" : "5-Flusitozin",
-                        "degerler" : {
-                            "s" : "-",
-                            "i" : "-",
-                            "r" : "-"
-                        }
-                    },
-                    {
-                        "antifungal" : "Posakonazol",
-                        "degerler" : {
-                            "s" : "-",
-                            "i" : "-",
-                            "r" : "-"
-                        }
-                    },
-                    {
-                        "antifungal" : "Vorikonazol",
-                        "degerler" : {
-                            "s" : "-",
-                            "i" : "-",
-                            "r" : "-"
-                        }
-                    },
-                    {
-                        "antifungal" : "İtrakonazol",
-                        "degerler" : {
-                            "s" : "-",
-                            "i" : "-",
-                            "r" : "-"
-                        }
-                    },
-                    {
-                        "antifungal" : "Flukonazol",
-                        "degerler" : {
-                            "s" : "-",
-                            "i" : "-",
-                            "r" : "-"
-                        }
-                    },
-                    {
-                        "antifungal" : "Amfoterisin B",
-                        "degerler" : {
-                            "s" : "1",
-                            "i" : "-",
-                            "r" : "2"
-                        }
-                    }
+                    { "antifungal" : "Anidulafungin", "degerler" : { "s" : "-", "i" : "-", "r" : "-" } },
+                    { "antifungal" : "Mikafungin", "degerler" : { "s" : "-", "i" : "-", "r" : "-" } },
+                    { "antifungal" : "Kaspofungin", "degerler" : { "s" : "-", "i" : "-", "r" : "-" } },
+                    { "antifungal" : "5-Flusitozin", "degerler" : { "s" : "-", "i" : "-", "r" : "-" } },
+                    { "antifungal" : "Posakonazol", "degerler" : { "s" : "-", "i" : "-", "r" : "-" } },
+                    { "antifungal" : "Vorikonazol", "degerler" : { "s" : "-", "i" : "-", "r" : "-" } },
+                    { "antifungal" : "İtrakonazol", "degerler" : { "s" : "-", "i" : "-", "r" : "-" } },
+                    { "antifungal" : "Flukonazol", "degerler" : { "s" : "-", "i" : "-", "r" : "-" } },
+                    { "antifungal" : "Amfoterisin B", "degerler" : { "s" : "1", "i" : "-", "r" : "2" } }
                 ]
             }
         ]
     };
 
-    const GUIDE1_COLUMNS = [
-      { key: 's', label: 'S \u2264' },
-      { key: 'i', label: 'I' },
-      { key: 'r', label: 'R ≥' }
-    ];
-
     const state = {
       selectedMantarName: null,
-      selectedAntifungal: null
+      selectedAntifungal: null,
+      readMode: null // Senkronizasyon ile doldurulacak
     };
 
     const mantarInput = document.getElementById('mantar-input');
@@ -1084,6 +598,31 @@
     const antifungalInput = document.getElementById('antifungal-input');
     const antifungalSuggestions = document.getElementById('antifungal-suggestions');
     const resultsEl = document.getElementById('results');
+    
+    // Switch Buton Etkileşimi
+    const switchInput = document.getElementById('read-mode-switch');
+    const switchLabelText = document.getElementById('switch-label-text');
+    const plateHintText = document.getElementById('plate-hint-text');
+
+    // Sayfa yenilendiğinde güncel durumu yakalayan senkronizasyon fonksiyonu
+    function syncSwitchState() {
+      state.readMode = switchInput.checked ? 'mic-well' : 'last-pink';
+      switchLabelText.textContent = switchInput.checked ? 'MİK değeri seçiliyor' : 'Son pembe kuyu seçiliyor';
+      
+      if (state.readMode === 'mic-well') {
+        plateHintText.innerHTML = "Doğrudan <b>MİK değerine karşılık gelen</b> (üremenin bittiği İLK mavi) kuyucuğa tıklayın. Solundaki kuyucuklar otomatik pembe olur.";
+      } else {
+        plateHintText.innerHTML = "Üreme gördüğünüz en yüksek konsantrasyonlu <b>SON pembe</b> kuyucuğa tıklayın. Kendisi ve solundakiler pembe olur.";
+      }
+    }
+
+    switchInput.addEventListener('change', () => {
+      syncSwitchState();
+      renderPlateGrid();
+    });
+
+    // Başlangıç durumunu, HTML'deki 'checked' niteliği veya tarayıcı önbelleğindeki haline göre ayarla
+    syncSwitchState();
 
     function turkishLower(str) {
       return str.toLocaleLowerCase('tr-TR');
@@ -1216,7 +755,7 @@
       return names;
     }
 
-    function renderGuideSection(badgeLabel, badgeClass, mantarObj, columns, selectedAntifungal) {
+    function renderGuideSection(badgeLabel, badgeClass, mantarObj, selectedAntifungal) {
       if (!mantarObj) return '';
       let rows = mantarObj.antifungaller;
       if (selectedAntifungal) {
@@ -1224,19 +763,33 @@
       }
       if (rows.length === 0) return '';
 
+      // SDD sütunu kontrolü
+      const hasSdd = rows.some(r => r.degerler.sdd && r.degerler.sdd !== '-');
+      
+      const columns = [
+        { key: 's', label: 'S \u2264' },
+        { key: 'i', label: 'I' }
+      ];
+      if (hasSdd) {
+        columns.push({ key: 'sdd', label: 'SDD' });
+      }
+      columns.push({ key: 'r', label: 'R \u2265' });
+
       let html = '<div class="guide-section">';
       html += '<div class="guide-badge ' + badgeClass + '">' + badgeLabel + '</div>';
-      html += '<table><thead><tr><th>Antifungal</th>';
+      
+      // Genişliklerin eşit dağılması için class'lar atandı
+      html += '<table class="guide-table"><thead><tr><th class="col-antifungal">Antifungal</th>';
       columns.forEach(col => {
-        html += '<th>' + col.label + '</th>';
+        html += '<th class="col-value">' + col.label + '</th>';
       });
       html += '</tr></thead><tbody>';
 
       rows.forEach(a => {
-        html += '<tr><td>' + a.antifungal + '</td>';
+        html += '<tr><td class="col-antifungal">' + a.antifungal + '</td>';
         columns.forEach(col => {
           const val = a.degerler[col.key];
-          html += '<td>' + (val === undefined ? '-' : val) + '</td>';
+          html += '<td class="col-value">' + (val === undefined ? '-' : val) + '</td>';
         });
         html += '</tr>';
       });
@@ -1253,7 +806,7 @@
 
       const g1 = findMantar(GUIDE1_DATA, state.selectedMantarName);
 
-      const section1 = renderGuideSection('REHBER 1', 'guide1', g1, GUIDE1_COLUMNS, state.selectedAntifungal);
+      const section1 = renderGuideSection('REHBER 1', 'guide1', g1, state.selectedAntifungal);
 
       if (!section1) {
         resultsEl.innerHTML = '<h2>' + state.selectedMantarName + '</h2><div class="hint">Bu antifungal için veri bulunamadı.</div>';
@@ -1263,7 +816,6 @@
       resultsEl.innerHTML = '<h2>' + state.selectedMantarName + '</h2>' + section1;
     }
 
-    // Seçili mantar (ve varsa seçili antifungal) için Rehber 1'deki "not" alanlarını toplar.
     function getNotesForMantar(mantarName, selectedAntifungal) {
       const notes = [];
       const data = findMantar(GUIDE1_DATA, mantarName);
@@ -1419,8 +971,6 @@
       ]
     };
 
-    // Her antifungal için kuyucukları artan konsantrasyon sırasına göre dizer.
-    // (AB için bu, 12. sütunda A-G satırları boyunca aşağı doğru okumak demektir.)
     const PLATE_SERIES = {};
     PLATE_ROWS.forEach(row => {
       PLATE_WELLS[row].forEach((well, i) => {
@@ -1434,23 +984,32 @@
       PLATE_SERIES[code].sort((a, b) => a.conc - b.conc);
     });
 
-    // code -> pembe (üreme) olan son kuyucuğun PLATE_SERIES içindeki index'i; -1 = hiçbiri pembe değil
+    // code -> SON pembe (üreme) olan kuyucuğun index değeri.
     const plateState = {};
 
     function getWellSeriesIndex(code, row, col) {
+      if (code === 'POS') return -1;
       return PLATE_SERIES[code].findIndex(w => w.row === row && w.col === col);
-    }
-
-    function isWellPink(well, row, col) {
-      if (well.code === 'POS') return true;
-      const boundary = plateState[well.code] !== undefined ? plateState[well.code] : -1;
-      return getWellSeriesIndex(well.code, row, col) <= boundary;
     }
 
     function onWellClick(code, row, col) {
       const idx = getWellSeriesIndex(code, row, col);
-      const current = plateState[code] !== undefined ? plateState[code] : -1;
-      plateState[code] = (current === idx) ? -1 : idx;
+      
+      // Hangi mantıkla tıkladığımıza bağlı olarak yeni pembe sınırı belirliyoruz
+      let newBoundary;
+      if (state.readMode === 'mic-well') {
+        newBoundary = idx - 1; // Tıklanan mavi kutu (MİK), ondan öncekiler pembe
+      } else {
+        newBoundary = idx; // Tıklanan pembe kutu (Son pembe), o da dahil pembe
+      }
+
+      // Seçimi kaldırma (toggle)
+      if (plateState[code] === newBoundary) {
+        plateState[code] = undefined;
+      } else {
+        plateState[code] = newBoundary;
+      }
+      
       renderPlateGrid();
       renderPlateReport();
     }
@@ -1465,13 +1024,34 @@
 
       PLATE_ROWS.forEach(row => {
         html += '<tr><th class="plate-row-label">' + row + '</th>';
+        
         PLATE_WELLS[row].forEach((well, i) => {
           const col = i + 1;
-          const pink = isWellPink(well, row, col);
-          const cls = well.code === 'POS' ? 'well-pos' : (pink ? 'well-pink' : 'well-blue');
+          
+          let cls = 'well-blue';
+          let extraCls = '';
+
+          if (well.code === 'POS') {
+            cls = 'well-pos';
+          } else {
+            const wellIndex = getWellSeriesIndex(well.code, row, col);
+            const boundary = plateState[well.code] !== undefined ? plateState[well.code] : -1;
+            const isPink = wellIndex <= boundary;
+
+            if (isPink) {
+              cls = 'well-pink';
+            }
+
+            // MİK kuyucuğunun kalın siyah çerçeveyle görselleştirilmesi
+            if (state.readMode === 'mic-well' && plateState[well.code] !== undefined && wellIndex === boundary + 1) {
+              extraCls = ' mic-selected';
+            }
+          }
+
           const label = well.code === 'POS' ? 'POS' : well.code;
           const concLabel = well.code === 'POS' ? '' : '<span class="well-conc">' + well.conc + '</span>';
-          html += '<td><div class="well ' + cls + '" data-row="' + row + '" data-col="' + col +
+          
+          html += '<td><div class="well ' + cls + extraCls + '" data-row="' + row + '" data-col="' + col +
             '" data-code="' + well.code + '"><span class="well-code">' + label + '</span>' + concLabel + '</div></td>';
         });
         html += '</tr>';
@@ -1502,6 +1082,7 @@
     function getMIC(code) {
       const series = PLATE_SERIES[code];
       const boundary = plateState[code] !== undefined ? plateState[code] : -1;
+      
       if (boundary === -1) {
         return { text: '\u2264' + series[0].conc, value: series[0].conc };
       }
@@ -1512,8 +1093,6 @@
       return { text: String(micValue), value: micValue };
     }
 
-    // MİK değerini rehberdeki S/I/R eşiklerine göre kategorize eder.
-    // S <= s ise S, R >= r ise R, s ile r arasındaysa I.
     function classifyBreakpoint(micValue, breakpoint) {
       if (!breakpoint) return null;
       const sRaw = breakpoint.s;
@@ -1533,9 +1112,13 @@
       }
 
       if (sIsNum && micValue <= parseFloat(sRaw)) return { label: 'S', cat: 's' };
-
       if (rIsNum && micValue >= parseFloat(rRaw)) return { label: 'R', cat: 'r' };
 
+      const sddRaw = breakpoint.sdd;
+      if (sddRaw !== undefined && sddRaw !== '-') {
+        return { label: 'SDD', cat: 'sdd' };
+      }
+      
       return { label: 'I', cat: 'i' };
     }
 
@@ -1554,7 +1137,6 @@
       let hasReport = false;
 
       PLATE_REPORT_ORDER.forEach(code => {
-        // Candida krusei için Flukonazol (FZ) doğal dirençli olduğundan raporda gösterilmez.
         if (state.selectedMantarName === "Candida krusei" && code === "FZ") return;
 
         const name = PLATE_ANTIFUNGALS[code];
@@ -1562,11 +1144,9 @@
         const bp1 = g1 ? g1.antifungaller.find(a => a.antifungal === name) : null;
         const cat1 = bp1 ? classifyBreakpoint(mic.value, bp1.degerler) : null;
 
-        // Yalnızca değerlendirilebilir (S, I, R) sonucu olanlar eklenecek
         if (cat1) {
           hasReport = true;
           html += '<div class="report-row">';
-          // İsim yerine kısaltma (code) kullanıldı
           html += '<span class="report-name">' + code + '</span>';
           html += '<span class="report-mic">MİK: ' + mic.text + '</span>';
           html += '<span class="badge cat-' + cat1.cat + '">' + cat1.label + '</span>';
@@ -1574,7 +1154,6 @@
         }
       });
       
-      // Eğer hiç sonuç çıkmadıysa kullanıcıya belirtiyoruz
       if (!hasReport) {
         html += '<div class="hint">Bu mantar için raporlanabilir bir S/I/R sınır değeri bulunmamaktadır.</div>';
       }
