@@ -187,14 +187,13 @@
       color: #1a5fb4;
     }
 
-    /* Switch CSS Güncellemesi - Yan yana durmaları için Flex kullanıldı */
     .switch-wrap-container {
       margin-bottom: 12px;
       padding-bottom: 12px;
       border-bottom: 1px solid #eee;
       display: flex;
       flex-wrap: wrap;
-      gap: 24px; /* Switchler arası boşluk */
+      gap: 24px;
     }
     .switch-wrap {
       display: inline-flex;
@@ -433,14 +432,13 @@
       <h2 class="plate-title">Sensititre YeastOne YO10 Plakası</h2>
 
       <div class="switch-wrap-container">
-        <!-- 1. MİK Switch -->
+        
         <label class="switch-wrap">
           <input type="checkbox" id="read-mode-switch" checked>
           <span class="switch-slider"></span>
           <span class="switch-label" id="switch-label-text">MİK değeri seçiliyor</span>
         </label>
 
-        <!-- 2. Doğal Direnç Switch (Yeni) -->
         <label class="switch-wrap">
           <input type="checkbox" id="intrinsic-mode-switch" checked>
           <span class="switch-slider"></span>
@@ -527,7 +525,6 @@
                     { "antifungal" : "Posakonazol", "degerler" : { "s" : "-", "i" : "-", "r" : "-" }, "not" : "Bu türlerin ECOFF değerleri genel olarak C. albinans'ın değerlerinden daha yüksektir." },
                     { "antifungal" : "Vorikonazol", "degerler" : { "s" : "0.5", "i" : "1", "r" : "2" } },
                     { "antifungal" : "İtrakonazol", "degerler" : { "s" : "-", "i" : "-", "r" : "-" }, "not" : "Bu türlerin ECOFF değerleri genel olarak C. albinans'ın değerlerinden daha yüksektir." },
-                    // Doğal Direnç Tanımı Buraya Eklendi
                     { "antifungal" : "Flukonazol", "degerler" : { "s" : "R", "i" : "R", "r" : "R" }, "dogal_direnc": true },
                     { "antifungal" : "Amfoterisin B", "degerler" : { "s" : "1", "i" : "-", "r" : "2" } }
                 ]
@@ -595,7 +592,7 @@
       selectedMantarName: null,
       selectedAntifungal: null,
       readMode: null,
-      showIntrinsic: true // Yeni state özelliği
+      showIntrinsic: true
     };
 
     const mantarInput = document.getElementById('mantar-input');
@@ -604,12 +601,10 @@
     const antifungalSuggestions = document.getElementById('antifungal-suggestions');
     const resultsEl = document.getElementById('results');
 
-    // 1. Switch Etkileşimleri (MİK Okuma Modu)
     const switchInput = document.getElementById('read-mode-switch');
     const switchLabelText = document.getElementById('switch-label-text');
     const plateHintText = document.getElementById('plate-hint-text');
 
-    // 2. Switch Etkileşimleri (Doğal Direnç Modu)
     const intrinsicSwitch = document.getElementById('intrinsic-mode-switch');
     const intrinsicLabelText = document.getElementById('intrinsic-label-text');
 
@@ -636,10 +631,9 @@
 
     intrinsicSwitch.addEventListener('change', () => {
       syncIntrinsicState();
-      renderPlateReport(); // Tabloyu yeniden hesapla ve çiz
+      renderPlateReport();
     });
 
-    // Başlangıç senkronizasyonları
     syncSwitchState();
     syncIntrinsicState();
 
@@ -1153,8 +1147,6 @@
         const name = PLATE_ANTIFUNGALS[code];
         const bp1 = g1 ? g1.antifungaller.find(a => a.antifungal === name) : null;
         
-        // --- DOĞAL DİRENÇ KONTROLÜ (YENİ EKLENEN MANTIK) ---
-        // Eğer json'da dogal_direnc: true yazıyorsa ve switch kapalıysa (gizleme açıksa), bu ilacı raporda atla.
         if (bp1 && bp1.dogal_direnc && !state.showIntrinsic) {
             return; 
         }
