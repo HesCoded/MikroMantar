@@ -129,12 +129,11 @@
       color: #1a5fb4;
     }
 
-    /* Düzenli tablo genişlikleri için sabit düzen */
     .guide-table {
       width: 100%;
       border-collapse: collapse;
       font-size: 14px;
-      table-layout: fixed; /* Sütun genişliklerini zorunlu kılar */
+      table-layout: fixed;
     }
     .guide-table th, .guide-table td {
       padding: 8px 10px;
@@ -148,8 +147,6 @@
     .guide-table tr:last-child td {
       border-bottom: none;
     }
-    
-    /* Antifungal sütunu %40, diğerleri kalan %60'ı eşit paylaşır */
     .col-antifungal {
       width: 40%;
       text-align: left;
@@ -190,11 +187,14 @@
       color: #1a5fb4;
     }
 
-    /* Switch CSS */
+    /* Switch CSS Güncellemesi - Yan yana durmaları için Flex kullanıldı */
     .switch-wrap-container {
       margin-bottom: 12px;
       padding-bottom: 12px;
       border-bottom: 1px solid #eee;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px; /* Switchler arası boşluk */
     }
     .switch-wrap {
       display: inline-flex;
@@ -247,8 +247,7 @@
       overflow-x: auto;
       padding-bottom: 4px;
     }
-    
-    /* Plaka Tablosu: width: 100% eklenerek genişliğin yeniden tüm alana yayılması sağlandı */
+
     .plate-table {
       width: 100%;
       border-collapse: collapse;
@@ -299,13 +298,10 @@
       background: #b3175f;
       cursor: default;
     }
-    
-    /* MİK kutucuğu: Genişliği artırmayan içeri doğru 4px siyah çerçeve */
     .well.mic-selected {
       border: 4px solid #1a1a1a;
       box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
     }
-    
     .well:hover:not(.well-pos) {
       filter: brightness(1.1);
     }
@@ -411,7 +407,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>MikroMantar <span class="version-badge">v1.1</span></h1>
+    <h1>MikroMantar <span class="version-badge">v1.2</span></h1>
     <p class="subtitle">Antifungal duyarlılık sorgulama uygulaması</p>
 
     <div class="form-row">
@@ -435,13 +431,20 @@
 
     <div class="plate-panel">
       <h2 class="plate-title">Sensititre YeastOne YO10 Plakası</h2>
-      
+
       <div class="switch-wrap-container">
+        <!-- 1. MİK Switch -->
         <label class="switch-wrap">
-          <!-- Varsayılan checkbox -->
           <input type="checkbox" id="read-mode-switch" checked>
           <span class="switch-slider"></span>
           <span class="switch-label" id="switch-label-text">MİK değeri seçiliyor</span>
+        </label>
+
+        <!-- 2. Doğal Direnç Switch (Yeni) -->
+        <label class="switch-wrap">
+          <input type="checkbox" id="intrinsic-mode-switch" checked>
+          <span class="switch-slider"></span>
+          <span class="switch-label" id="intrinsic-label-text">Doğal dirençliler raporda gösteriliyor</span>
         </label>
       </div>
 
@@ -524,7 +527,8 @@
                     { "antifungal" : "Posakonazol", "degerler" : { "s" : "-", "i" : "-", "r" : "-" }, "not" : "Bu türlerin ECOFF değerleri genel olarak C. albinans'ın değerlerinden daha yüksektir." },
                     { "antifungal" : "Vorikonazol", "degerler" : { "s" : "0.5", "i" : "1", "r" : "2" } },
                     { "antifungal" : "İtrakonazol", "degerler" : { "s" : "-", "i" : "-", "r" : "-" }, "not" : "Bu türlerin ECOFF değerleri genel olarak C. albinans'ın değerlerinden daha yüksektir." },
-                    { "antifungal" : "Flukonazol", "degerler" : { "s" : "R", "i" : "R", "r" : "R" } },
+                    // Doğal Direnç Tanımı Buraya Eklendi
+                    { "antifungal" : "Flukonazol", "degerler" : { "s" : "R", "i" : "R", "r" : "R" }, "dogal_direnc": true },
                     { "antifungal" : "Amfoterisin B", "degerler" : { "s" : "1", "i" : "-", "r" : "2" } }
                 ]
             },
@@ -590,7 +594,8 @@
     const state = {
       selectedMantarName: null,
       selectedAntifungal: null,
-      readMode: null // Senkronizasyon ile doldurulacak
+      readMode: null,
+      showIntrinsic: true // Yeni state özelliği
     };
 
     const mantarInput = document.getElementById('mantar-input');
@@ -598,17 +603,20 @@
     const antifungalInput = document.getElementById('antifungal-input');
     const antifungalSuggestions = document.getElementById('antifungal-suggestions');
     const resultsEl = document.getElementById('results');
-    
-    // Switch Buton Etkileşimi
+
+    // 1. Switch Etkileşimleri (MİK Okuma Modu)
     const switchInput = document.getElementById('read-mode-switch');
     const switchLabelText = document.getElementById('switch-label-text');
     const plateHintText = document.getElementById('plate-hint-text');
 
-    // Sayfa yenilendiğinde güncel durumu yakalayan senkronizasyon fonksiyonu
+    // 2. Switch Etkileşimleri (Doğal Direnç Modu)
+    const intrinsicSwitch = document.getElementById('intrinsic-mode-switch');
+    const intrinsicLabelText = document.getElementById('intrinsic-label-text');
+
     function syncSwitchState() {
       state.readMode = switchInput.checked ? 'mic-well' : 'last-pink';
       switchLabelText.textContent = switchInput.checked ? 'MİK değeri seçiliyor' : 'Son pembe kuyu seçiliyor';
-      
+
       if (state.readMode === 'mic-well') {
         plateHintText.innerHTML = "Doğrudan <b>MİK değerine karşılık gelen</b> (üremenin bittiği İLK mavi) kuyucuğa tıklayın. Solundaki kuyucuklar otomatik pembe olur.";
       } else {
@@ -616,13 +624,24 @@
       }
     }
 
+    function syncIntrinsicState() {
+      state.showIntrinsic = intrinsicSwitch.checked;
+      intrinsicLabelText.textContent = intrinsicSwitch.checked ? 'Doğal dirençliler raporda gösteriliyor' : 'Doğal dirençliler raporda gizleniyor';
+    }
+
     switchInput.addEventListener('change', () => {
       syncSwitchState();
       renderPlateGrid();
     });
 
-    // Başlangıç durumunu, HTML'deki 'checked' niteliği veya tarayıcı önbelleğindeki haline göre ayarla
+    intrinsicSwitch.addEventListener('change', () => {
+      syncIntrinsicState();
+      renderPlateReport(); // Tabloyu yeniden hesapla ve çiz
+    });
+
+    // Başlangıç senkronizasyonları
     syncSwitchState();
+    syncIntrinsicState();
 
     function turkishLower(str) {
       return str.toLocaleLowerCase('tr-TR');
@@ -763,9 +782,8 @@
       }
       if (rows.length === 0) return '';
 
-      // SDD sütunu kontrolü
       const hasSdd = rows.some(r => r.degerler.sdd && r.degerler.sdd !== '-');
-      
+
       const columns = [
         { key: 's', label: 'S \u2264' },
         { key: 'i', label: 'I' }
@@ -777,8 +795,7 @@
 
       let html = '<div class="guide-section">';
       html += '<div class="guide-badge ' + badgeClass + '">' + badgeLabel + '</div>';
-      
-      // Genişliklerin eşit dağılması için class'lar atandı
+
       html += '<table class="guide-table"><thead><tr><th class="col-antifungal">Antifungal</th>';
       columns.forEach(col => {
         html += '<th class="col-value">' + col.label + '</th>';
@@ -820,13 +837,13 @@
       const notes = [];
       const data = findMantar(GUIDE1_DATA, mantarName);
       if (!data) return notes;
-      
+
       data.antifungaller.forEach(a => {
         if (a.not && (!selectedAntifungal || a.antifungal === selectedAntifungal)) {
           notes.push({ antifungal: a.antifungal, text: a.not });
         }
       });
-      
+
       return notes;
     }
 
@@ -984,7 +1001,6 @@
       PLATE_SERIES[code].sort((a, b) => a.conc - b.conc);
     });
 
-    // code -> SON pembe (üreme) olan kuyucuğun index değeri.
     const plateState = {};
 
     function getWellSeriesIndex(code, row, col) {
@@ -994,22 +1010,20 @@
 
     function onWellClick(code, row, col) {
       const idx = getWellSeriesIndex(code, row, col);
-      
-      // Hangi mantıkla tıkladığımıza bağlı olarak yeni pembe sınırı belirliyoruz
+
       let newBoundary;
       if (state.readMode === 'mic-well') {
-        newBoundary = idx - 1; // Tıklanan mavi kutu (MİK), ondan öncekiler pembe
+        newBoundary = idx - 1;
       } else {
-        newBoundary = idx; // Tıklanan pembe kutu (Son pembe), o da dahil pembe
+        newBoundary = idx;
       }
 
-      // Seçimi kaldırma (toggle)
       if (plateState[code] === newBoundary) {
         plateState[code] = undefined;
       } else {
         plateState[code] = newBoundary;
       }
-      
+
       renderPlateGrid();
       renderPlateReport();
     }
@@ -1024,10 +1038,10 @@
 
       PLATE_ROWS.forEach(row => {
         html += '<tr><th class="plate-row-label">' + row + '</th>';
-        
+
         PLATE_WELLS[row].forEach((well, i) => {
           const col = i + 1;
-          
+
           let cls = 'well-blue';
           let extraCls = '';
 
@@ -1042,7 +1056,6 @@
               cls = 'well-pink';
             }
 
-            // MİK kuyucuğunun kalın siyah çerçeveyle görselleştirilmesi
             if (state.readMode === 'mic-well' && plateState[well.code] !== undefined && wellIndex === boundary + 1) {
               extraCls = ' mic-selected';
             }
@@ -1050,7 +1063,7 @@
 
           const label = well.code === 'POS' ? 'POS' : well.code;
           const concLabel = well.code === 'POS' ? '' : '<span class="well-conc">' + well.conc + '</span>';
-          
+
           html += '<td><div class="well ' + cls + extraCls + '" data-row="' + row + '" data-col="' + col +
             '" data-code="' + well.code + '"><span class="well-code">' + label + '</span>' + concLabel + '</div></td>';
         });
@@ -1082,7 +1095,7 @@
     function getMIC(code) {
       const series = PLATE_SERIES[code];
       const boundary = plateState[code] !== undefined ? plateState[code] : -1;
-      
+
       if (boundary === -1) {
         return { text: '\u2264' + series[0].conc, value: series[0].conc };
       }
@@ -1118,7 +1131,7 @@
       if (sddRaw !== undefined && sddRaw !== '-') {
         return { label: 'SDD', cat: 'sdd' };
       }
-      
+
       return { label: 'I', cat: 'i' };
     }
 
@@ -1137,11 +1150,16 @@
       let hasReport = false;
 
       PLATE_REPORT_ORDER.forEach(code => {
-        if (state.selectedMantarName === "Candida krusei" && code === "FZ") return;
-
         const name = PLATE_ANTIFUNGALS[code];
-        const mic = getMIC(code);
         const bp1 = g1 ? g1.antifungaller.find(a => a.antifungal === name) : null;
+        
+        // --- DOĞAL DİRENÇ KONTROLÜ (YENİ EKLENEN MANTIK) ---
+        // Eğer json'da dogal_direnc: true yazıyorsa ve switch kapalıysa (gizleme açıksa), bu ilacı raporda atla.
+        if (bp1 && bp1.dogal_direnc && !state.showIntrinsic) {
+            return; 
+        }
+
+        const mic = getMIC(code);
         const cat1 = bp1 ? classifyBreakpoint(mic.value, bp1.degerler) : null;
 
         if (cat1) {
@@ -1153,7 +1171,7 @@
           html += '</div>';
         }
       });
-      
+
       if (!hasReport) {
         html += '<div class="hint">Bu mantar için raporlanabilir bir S/I/R sınır değeri bulunmamaktadır.</div>';
       }
